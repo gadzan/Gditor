@@ -4,9 +4,23 @@ Gditor
 
 */
 const 
-  version = 0.8,
+  version = 0.81,
   localDataFolder = "shared://gditor/",
   configFilePath = "drive://gditor.json";
+
+!$file.isDirectory(localDataFolder) ? $file.mkdir(localDataFolder) : false;
+var config = $file.read(configFilePath);
+if (config) {
+  var LocalConfig = JSON.parse(config.string);
+} else {
+  var LocalConfig = {
+    tabSpace: true,
+    tabSpaceNum: 2
+  };
+  saveConfig()
+};
+var chapters = $file.list(localDataFolder);
+var oldLinesNum = 0;
 
 const tabEveryLineSwitch = {
   type: "view",
@@ -593,19 +607,7 @@ function checkUpdate() {
   })
 }
 
-!$file.isDirectory(localDataFolder) ? $file.mkdir(localDataFolder) : false;
-var config = $file.read(configFilePath);
-if (config) {
-  var LocalConfig = JSON.parse(config.string);
-} else {
-  var LocalConfig = {
-    tabSpace: true,
-    tabSpaceNum: 2
-  };
-  saveConfig()
-};
-var chapters = $file.list(localDataFolder);
-var oldLinesNum = 0;
+checkUpdate();
 renderMainPage();
 var listView = $("fileList");
 listView.data = chapters;
