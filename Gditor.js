@@ -592,7 +592,7 @@ function checkUpdate() {
           title: "最新版本为 " + newVersion,
           message: "更新后自动会关闭本扩展,重新打开本扩展即可.\n" + msg,
           actions: [{
-            title: "更新提醒",
+            title: "更新",
             handler: function() {
               var url = "jsbox://install?url=https://raw.githubusercontent.com/gadzan/Gditor/master/Gditor.js&name=Gditor&icon=icon_030.png";
               $app.openURL(encodeURI(url));
