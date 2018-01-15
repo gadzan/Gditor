@@ -2,25 +2,41 @@
 Gditor
 作者: Gadzan
 
+gihub地址: https://github.com/gadzan/Gditor
+
+- 文章为txt格式，默认保存到JSbox本地
+- 支持在文章页转换markdown为html并导出pdf
+- 支持导出txt格式文件
+- 支持设置段前空格
+
 */
-const 
-  version = 0.81,
+const
+  version = 0.82,
   localDataFolder = "shared://gditor/",
   configFilePath = "drive://gditor.json";
 
 !$file.isDirectory(localDataFolder) ? $file.mkdir(localDataFolder) : false;
 var config = $file.read(configFilePath);
+if(!$cache.get("firstUse")){
+  $cache.set("firstUse",true)
+}else{
+  // 第一次使用
+  $ui.toast("第一次使用");
+};
+var configTamplate = {
+    tabSpace: true,
+    tabSpaceNum: 2,
+    autoSaver: true
+  };
 if (config) {
   var LocalConfig = JSON.parse(config.string);
 } else {
-  var LocalConfig = {
-    tabSpace: true,
-    tabSpaceNum: 2
-  };
+  var LocalConfig = configTamplate;
   saveConfig()
 };
-var chapters = $file.list(localDataFolder);
-var oldLinesNum = 0;
+var
+  chapters = $file.list(localDataFolder),
+  oldLinesNum = 0;
 
 const tabEveryLineSwitch = {
   type: "view",
@@ -229,8 +245,8 @@ const splitTextCompleteBtn = {
   events: {
     tapped: function(sender) {
       var slc = $("editor").selectedRange;
-      $("editor").text = $("editor").text.slice(0,slc.location) + $("textSplitShow").text +
-      $("editor").text.slice(slc.location + slc.length);
+      $("editor").text = $("editor").text.slice(0, slc.location) + $("textSplitShow").text +
+        $("editor").text.slice(slc.location + slc.length);
       $console.info($("editor").text.length)
       $("editor").selectedRange = $range(slc.location, $("textSplitShow").text.length)
       $ui.pop()
@@ -258,6 +274,24 @@ const copyToClipBoardBtn = {
   }
 }
 
+const makeNewFolderBtn = {
+  type: "button",
+  props: {
+    title: "新建文件夹",
+    bgcolor: $color("clear"),
+    icon: $icon("028", $color("#777777"), $size(20, 20))
+  },
+  layout: function(make, view) {
+    make.top.inset(10)
+    make.left.equalTo(view.prev.right).offset(10);
+    make.size.equalTo($size(24, 24))
+  },
+  events: {
+    tapped: function(sender) {
+      $ui.alert("")
+    }
+  }
+}
 
 const fileListView = {
   type: "list",
@@ -313,7 +347,7 @@ const fileListView = {
 }
 
 function textSplitorProcessor(splitText) {
-  if(splitText==""){
+  if (splitText == "") {
     $ui.toast("不能为空区域分词")
   }
   $text.tokenize({
@@ -361,7 +395,7 @@ function textSplitorProcessor(splitText) {
                   }
                 })
               },
-              layout: function(make,view) {
+              layout: function(make, view) {
                 make.left.bottom.right.equalTo(0)
                 make.top.equalTo(view.prev.bottom).offset(10)
               },
@@ -430,12 +464,13 @@ function tabSpaceProcess(sender) {
 }
 
 function editChapter(indexPath) {
+  var timer;
   if (indexPath == null) {
     var fileName = "gditor_newfile";
   } else {
     var fileName = chapters[indexPath.row] ? chapters[indexPath.row] : "";
   }
-  $console.info(fileName)
+  //$console.info(fileName)
   var editorView = {
     name: "editor",
     page: {
@@ -460,15 +495,23 @@ function editChapter(indexPath) {
               sender.focus()
             },
             didBeginEditing: function(sender) {
+              timer = $timer.schedule({
+                interval: 30,
+                handler: function() {
+                  LocalConfig.autoSaver?processSave(indexPath, fileName, true):false
+                }
+              })
+
             },
             didEndEditing: function(sender) {
+              timer.invalidate()
             },
             didChange: function(sender) {
               if (LocalConfig.tabSpace) {
                 tabSpaceProcess(sender)
               }
             },
-            longPressed: function(){
+            longPressed: function() {
               textSplitorProcessor($("editor").text.substr($("editor").selectedRange.location, $("editor").selectedRange.length))
             }
           }
@@ -487,29 +530,12 @@ function editChapter(indexPath) {
           },
           events: {
             tapped: function(sender) {
-              var contentTitle = $("editor").text.split("\n")[0].replace(/(^\s*)|(\s*$)/g, "");
-              if (indexPath == null && $file.exists(localDataFolder + contentTitle + ".txt")) {
-                $ui.toast("文件已存在，请不要重复创建");
-                return false;
-              }
-              if (contentTitle != "") {
-                if ((contentTitle + ".txt") != fileName && fileName != "gditor_newfile") {
-                  //Replace
-                  saveFile(contentTitle, $("editor").text, fileName);
-                } else {
-                  //Rewrite 
-                  saveFile(contentTitle, $("editor").text);
-                }
-                chapters = $file.list(localDataFolder);
-                listView.data = chapters;
-              } else {
-                $ui.toast("首行标题不能为空");
-              }
+              processSave(indexPath, fileName, false);
             }
           }
         },
         convertionBtn,
-        splitTextBtn,
+        splitTextBtn
       ]
     }
   }
@@ -522,6 +548,7 @@ function addChapter(chapterName) {
   chapters.unshift(chapterName);
   saveFile(chapterName, "")
 }
+
 function deleteFile(indexPath) {
   var fileName = chapters[indexPath.row];
   var index = chapters.indexOf(fileName);
@@ -534,6 +561,28 @@ function deleteFile(indexPath) {
   }
 }
 
+function processSave(indexPath, fileName) {
+  var contentTitle = $("editor").text.split("\n")[0].replace(/(^\s*)|(\s*$)/g, "");
+  if (indexPath == null && $file.exists(localDataFolder + contentTitle + ".txt")) {
+    !LocalConfig.autoSaver?$ui.toast("文件已存在，请不要重复创建"):false;
+    return false;
+  }
+  if (contentTitle != "") {
+    if ((contentTitle + ".txt") != fileName && fileName != "gditor_newfile") {
+      //Replace
+      saveFile(contentTitle, $("editor").text, fileName);
+    } else {
+      //Rewrite 
+      saveFile(contentTitle, $("editor").text);
+    }
+    chapters = $file.list(localDataFolder);
+    listView.data = chapters;
+  } else {
+    !LocalConfig.autoSaver?$ui.toast("首行标题不能为空"):false;
+  }
+
+}
+
 function saveFile(fileName, content, oldFileName) {
   var saveFileSuccess = $file.write({
     data: $data({
@@ -543,7 +592,7 @@ function saveFile(fileName, content, oldFileName) {
   })
   if (oldFileName && saveFileSuccess) {
     var deleteFile = $file.delete(localDataFolder + oldFileName);
-    deleteFile ? true : $ui.alert("删除旧文件失败")
+    deleteFile ? true : !LocalConfig.autoSaver?$ui.alert("删除旧文件失败"):false
   }
   if (saveFileSuccess) {
     $ui.toast("保存成功");
