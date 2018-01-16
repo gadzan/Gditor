@@ -24,9 +24,7 @@ var config = $file.read(configFilePath);
 if (!$cache.get("firstUse")) {
   // 第一次使用
   $cache.set("firstUse", true)
-} else {
-
-};
+}
 var configTamplate = {
   tabSpace: true,
   tabSpaceNum: 2,
@@ -45,9 +43,7 @@ if (config) {
   var LocalConfig = configTamplate;
   saveConfig()
 };
-var
-  chapters = $file.list(localDataFolder),
-  oldLinesNum = 0;
+var chapters = $file.list(localDataFolder)
 
 const tabEveryLineSwitch = {
   type: "view",
@@ -222,8 +218,8 @@ const imageStocker = {
     }]
   },
   layout: function(make, view) {
-    make.top.left.right.inset(0)
-    make.bottom.inset(52)
+    make.bottom.left.right.inset(0)
+    make.top.inset(52)
   },
   events: {
     didSelect: function(sender, indexPath, data) {
@@ -236,13 +232,14 @@ const uploadImageBtn = {
   type: "button",
   props: {
     id: "Upload",
-    type: 1,
     title: "上传",
-    font: $font("bold", 18)
+    bgcolor: $color("clear"),
+    icon: $icon("166", $color("#5082E5"), $size(35, 35))
   },
   layout: function(make, view) {
-    make.bottom.inset(10)
-    make.left.inset(25)
+    make.top.inset(10)
+    make.right.inset(15)
+    make.size.equalTo($size(42,42))
   },
   events: {
     tapped: function(sender) {
@@ -363,7 +360,7 @@ const imageBtn = {
   props: {
     title: "图库",
     bgcolor: $color("clear"),
-    icon: $icon("081", $color("#777777"), $size(20, 20))
+    icon: $icon("014", $color("#777777"), $size(20, 20))
   },
   layout: function(make, view) {
     make.top.inset(10)
@@ -446,7 +443,7 @@ const makeNewFolderBtn = {
   props: {
     title: "新建文件夹",
     bgcolor: $color("clear"),
-    icon: $icon("028", $color("#777777"), $size(20, 20))
+    icon: $icon("057", $color("#777777"), $size(20, 20))
   },
   layout: function(make, view) {
     make.top.inset(10)
@@ -455,7 +452,8 @@ const makeNewFolderBtn = {
   },
   events: {
     tapped: function(sender) {
-      $ui.alert("")
+      
+      //$ui.alert("笔记集功能正在开发…")
     }
   }
 }
@@ -816,6 +814,7 @@ function renderMainPage() {
     views: [
       settingBtn,
       addNewChapterBtn,
+      makeNewFolderBtn,
       fileListView
     ]
   })
@@ -936,7 +935,7 @@ function deleteFile(indexPath) {
 }
 
 function processSave(indexPath, fileName ,auto) {
-  var contentTitle = $("editor").text.split("\n")[0].replace(/(^\s*)|(\s*$)/g, "");
+  var contentTitle = $("editor").text.split("\n")[0].replace(/(^\s*)|(\s*$)/g, "").replace(/[&\|\\\*^%$#@\-]/g,"");
   if (indexPath == null && $file.exists(localDataFolder + contentTitle + ".txt")) {
     $ui.toast("文件已存在，请不要重复创建");
     return false;
@@ -966,10 +965,10 @@ function saveFile(fileName, content, oldFileName, auto) {
   })
   if (oldFileName && saveFileSuccess) {
     var deleteFile = $file.delete(localDataFolder + oldFileName);
-    deleteFile ? true : !LocalConfig.autoSaver ? $ui.alert("删除旧文件失败") : false
+    deleteFile ? true : !auto ? $ui.alert("删除旧文件失败") : false
   }
   if (saveFileSuccess) {
-    !LocalConfig.autoSaver ? $ui.toast("保存成功") : false;
+    !auto ? $ui.toast("保存成功") : false;
   }
 }
 
