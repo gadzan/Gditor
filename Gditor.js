@@ -8,19 +8,17 @@ gihub地址: https://github.com/gadzan/Gditor
 - 支持设置段前空格
 - 支持自动保存
 
-To do: 
-- 文件夹
-
 */
 const
-  version = 0.9,
-  localDataFolder = "shared://gditor/",
-  localImageFolder = "shared://imageStocker/"
-configFilePath = "drive://gditor.json";
-
+  version = 0.91,
+  localImageFolder = "shared://imageStocker/",
+  configFilePath = "drive://gditor.json";
+  returnBtnIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MzU4QzZGMjJGQjQyMTFFNzk2RjRCMzIxMjc1MjYxNjIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MzU4QzZGMjNGQjQyMTFFNzk2RjRCMzIxMjc1MjYxNjIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDozNThDNkYyMEZCNDIxMUU3OTZGNEIzMjEyNzUyNjE2MiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDozNThDNkYyMUZCNDIxMUU3OTZGNEIzMjEyNzUyNjE2MiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pogbd5AAAADqSURBVHjaYvz//z8DLQETA40BzS1gwSeZmJjIA6S2A/G3+fPnu1PVB1DD9wKxDRBzUDWIkAw3A+JzQOxLNQuwGO4IDJ5P5FrAiJxM0QwHAX5KDMdmwUsgJYYk/40IM0BqTgFxP9Axe2iRTLmA2AuINwIdWEFqEAkCXfWBQFJmA1JxQNwNTfagODuD1QdAiS9AyhnqZRDYCzRAAJ8FQD2/gHgOkFkLxCAHNuINIjRLjIixBArmQOPDhGAcYLFkIyHTgXp+QJk8REUykiVHgPgHTcoiqCW2I7u4HuYVDhngCN6iYjQOsAGAAAMAqK5dYjN94HUAAAAASUVORK5CYII="
+var localDataFolder = "shared://gditor/";
 !$file.isDirectory(localDataFolder) ? $file.mkdir(localDataFolder) : false;
 !$file.isDirectory(localImageFolder) ? $file.mkdir(localImageFolder) : false;
-var config = $file.read(configFilePath);
+var config = $file.read(configFilePath),
+  oldLinesNum = 0;
 if (!$cache.get("firstUse")) {
   // 第一次使用
   $cache.set("firstUse", true)
@@ -239,7 +237,7 @@ const uploadImageBtn = {
   layout: function(make, view) {
     make.top.inset(10)
     make.right.inset(15)
-    make.size.equalTo($size(42,42))
+    make.size.equalTo($size(42, 42))
   },
   events: {
     tapped: function(sender) {
@@ -316,6 +314,28 @@ const settingBtn = {
   }
 }
 
+const returnBtn = {
+  type: "button",
+  props: {
+    id: "returnBtn",
+    title: "返回",
+    bgcolor: $color("clear"),
+    src: returnBtnIcon
+  },
+  layout: function(make, view) {
+    make.top.inset(10);
+    make.left.inset(15);
+    make.size.equalTo($size(24, 24))
+  },
+  events: {
+    tapped: function(sender) {
+      localDataFolder = findPrevFolder();
+      chapters = $file.list(localDataFolder);
+      listView.data = chapters;
+    }
+  }
+}
+
 const addNewChapterBtn = {
   type: "button",
   props: {
@@ -325,12 +345,35 @@ const addNewChapterBtn = {
   },
   layout: function(make, view) {
     make.top.inset(10);
-    make.left.inset(15);
+    make.left.equalTo(view.prev.right).offset(10);
     make.size.equalTo($size(24, 24))
   },
   events: {
     tapped: function(sender) {
-      editChapter(null);
+      $input.text({
+        type: $kbType.default,
+        placeholder: "请输入章节文件名(无需扩展名)",
+        handler: function(chapterFileName) {
+          chapterFileName = chapterFileName.split("\n")[0].replace(/(^\s*)|(\s*$)/g, "");
+          if(!$file.exists(localDataFolder + chapterFileName + ".txt")){
+            var newFileSuccess = $file.write({
+              data: $data({ string: "  " }),
+              path: localDataFolder + chapterFileName + ".txt"
+            })
+            if(newFileSuccess){
+              $ui.toast(chapterFileName+".txt 创建成功");
+              chapters = $file.list(localDataFolder);
+              listView.data = chapters;
+              var index = chapters.indexOf(chapterFileName+".txt");
+              editChapter($indexPath(index, index));
+            }else{
+              $ui.toast("文件创建失败");
+            }
+          }else{
+            $ui.toast("文件已存在，请勿重复创建");
+          }
+        }
+      })
     }
   }
 }
@@ -411,7 +454,6 @@ const splitTextCompleteBtn = {
       var slc = $("editor").selectedRange;
       $("editor").text = $("editor").text.slice(0, slc.location) + $("textSplitShow").text +
         $("editor").text.slice(slc.location + slc.length);
-      //$console.info($("editor").text.length)
       $("editor").selectedRange = $range(slc.location, $("textSplitShow").text.length)
       $ui.pop()
     }
@@ -452,8 +494,25 @@ const makeNewFolderBtn = {
   },
   events: {
     tapped: function(sender) {
-      
-      //$ui.alert("笔记集功能正在开发…")
+      $input.text({
+        type: $kbType.default,
+        placeholder: "请输入新笔记本名",
+        handler: function(notebookName) {
+          notebookName = notebookName.replace(/(^\s*)|(\s*$)/g, "");
+          if (!$file.isDirectory(localDataFolder + notebookName)) {
+            var mkdirSuccess = $file.mkdir(localDataFolder + notebookName)
+            if (mkdirSuccess) {
+              $ui.toast("笔记本 " + notebookName + " 创建成功")
+              chapters = $file.list(localDataFolder);
+              listView.data = chapters;
+            } else {
+              $ui.toast("笔记本 " + notebookName + " 创建失败")
+            };
+          } else {
+            $ui.toast("笔记本已存在");
+          }
+        }
+      })
     }
   }
 }
@@ -477,15 +536,32 @@ const fileListView = {
       }
     },
     actions: [{
-        title: "编辑",
+        title: "重命名",
         handler: function(sender, indexPath) {
-          editChapter(indexPath)
+          renameFile(indexPath)
         }
       },
       {
         title: "删除",
         handler: function(sender, indexPath) {
-          deleteFile(indexPath);
+          var isFolder = $file.isDirectory(localDataFolder + chapters[indexPath.row]) ? "笔记本包含里面的所有文章，请注意备份" : "文章: "+chapters[indexPath.row];
+          $ui.alert({
+            title: "确认删除?",
+            message: isFolder,
+            actions: [{
+                title: "确认",
+                handler: function() {
+                  deleteFile(indexPath);
+                }
+              },
+              {
+                title: "取消",
+                handler: function() {
+
+                }
+              }
+            ]
+          })
           listView.data = chapters;
         }
       },
@@ -493,9 +569,9 @@ const fileListView = {
         title: "导出",
         handler: function(sender, indexPath) {
           var fileItem = $file.read(localDataFolder + chapters[indexPath.row])
-          $ui.loading("处理中…");
+          // $ui.loading("处理中…");
           $share.sheet([chapters[indexPath.row], fileItem])
-          $ui.loading(false);
+          // $ui.loading(false);
         }
       }
     ]
@@ -506,9 +582,81 @@ const fileListView = {
   },
   events: {
     didSelect: function(sender, indexPath, data) {
-      editChapter(indexPath)
+      if ($file.isDirectory(localDataFolder + data)) {
+        localDataFolder = localDataFolder + data + "/";
+        //$console.info(localDataFolder.split('/'));
+        chapters = $file.list(localDataFolder);
+        prevFolder = findPrevFolder();
+        if(prevFolder!=localDataFolder){
+          $console.info(prevFolder);
+        }
+        if (chapters.length == 0) {
+          listView.data = [""];
+          listView.delete(0)
+        } else {
+          listView.data = chapters;
+        }
+      } else {
+        editChapter(indexPath)
+      }
     }
   }
+}
+
+function findPrevFolder(){
+  curPathArr = localDataFolder.split('/');
+  curPathArr.splice(curPathArr.length-2,2);
+  curPathArr.push("");
+  if(curPathArr.length < 4){
+    prevFolder = localDataFolder;
+  }else{
+    prevFolder = curPathArr.join("/")
+  }
+  return prevFolder;
+}
+
+function renameFile(indexPath){
+  oldName = chapters[indexPath.row];
+  $input.text({
+    type: $kbType.default,
+    placeholder: oldName,
+    handler: function(newName) {
+      newName = newName.replace(/(^\s*)|(\s*$)/g, "");
+      if($file.isDirectory(localDataFolder + oldName)){
+        if(!$file.isDirectory(localDataFolder + newName)){
+          if($file.mkdir(localDataFolder + newName)){
+            var renameSuccess = $file.move({
+              src: localDataFolder + oldName,
+              dst: localDataFolder + newName
+            })
+            if(renameSuccess){
+              chapters = $file.list(localDataFolder);
+              listView.data = chapters;
+            }else{
+              $ui.toast("重命名失败")
+            }
+          }
+        }else{
+          $ui.toast(newName+"不能与原名"+oldName+"相同");
+        }
+      }else{
+        if(!$file.exists(localDataFolder + newName)){
+          var renameSuccess = $file.move({
+            src: localDataFolder + oldName,
+            dst: localDataFolder + newName + ".txt"
+          })
+          if(renameSuccess){
+            chapters = $file.list(localDataFolder);
+            listView.data = chapters;
+          }else{
+            $ui.toast("重命名失败")
+          }
+        }else{
+          $ui.toast(newName+"不能与原名"+oldName+"相同");
+        }
+      }
+    }
+  })
 }
 
 function imageLoad() {
@@ -620,9 +768,9 @@ function imageDetails(url, indexpath, name, deleteURL, UploadDate, Height, Width
               //$clipboard.text = title
               //$ui.toast("已复制:" + title)
               var slc = $("editor").selectedRange;
-      $("editor").text = $("editor").text.slice(0, slc.location) + title +
-        $("editor").text.slice(slc.location + slc.length);
-      $("editor").selectedRange = $range(slc.location, title.length)
+              $("editor").text = $("editor").text.slice(0, slc.location) + title +
+                $("editor").text.slice(slc.location + slc.length);
+              $("editor").selectedRange = $range(slc.location, title.length)
               $ui.pop()
               $ui.pop()
             }
@@ -793,7 +941,6 @@ function saveConfig() {
     data: $data({ string: JSON.stringify(LocalConfig) }),
     path: configFilePath
   })
-  //$console.info(success)
 }
 
 function getFileContent(fileName) {
@@ -813,6 +960,7 @@ function renderMainPage() {
     },
     views: [
       settingBtn,
+      returnBtn,
       addNewChapterBtn,
       makeNewFolderBtn,
       fileListView
@@ -836,12 +984,7 @@ function tabSpaceProcess(sender) {
 
 function editChapter(indexPath) {
   var timer;
-  if (indexPath == null) {
-    var fileName = "gditor_newfile";
-  } else {
-    var fileName = chapters[indexPath.row] ? chapters[indexPath.row] : "";
-  }
-  //$console.info(fileName)
+  var fileName = chapters[indexPath.row] ? chapters[indexPath.row] : "";
   var editorView = {
     name: "editor",
     page: {
@@ -929,44 +1072,27 @@ function deleteFile(indexPath) {
     chapters.splice(index, 1);
     var deleteFile = $file.delete(localDataFolder + fileName)
     if (deleteFile) {
+      chapters = $file.list(localDataFolder);
+      listView.data = chapters;
       $ui.toast("已删除");
     }
   }
 }
 
-function processSave(indexPath, fileName ,auto) {
-  var contentTitle = $("editor").text.split("\n")[0].replace(/(^\s*)|(\s*$)/g, "").replace(/[&\|\\\*^%$#@\-]/g,"");
-  if (indexPath == null && $file.exists(localDataFolder + contentTitle + ".txt")) {
-    $ui.toast("文件已存在，请不要重复创建");
-    return false;
-  }
-  if (contentTitle != "") {
-    if ((contentTitle + ".txt") != fileName && fileName != "gditor_newfile") {
-      //Replace
-      saveFile(contentTitle, $("editor").text, fileName, auto);
-    } else {
-      //Rewrite 
-      saveFile(contentTitle, $("editor").text, null, auto);
-    }
-    chapters = $file.list(localDataFolder);
-    listView.data = chapters;
-  } else {
-    !auto? $ui.toast("首行标题不能为空") : false;
-  }
-
+function processSave(indexPath, fileName, auto) {
+  fileName = fileName.replace(/(\.txt)/g,"");
+  saveFile(fileName, $("editor").text, auto);
+  chapters = $file.list(localDataFolder);
+  listView.data = chapters;
 }
 
-function saveFile(fileName, content, oldFileName, auto) {
+function saveFile(fileName, content, auto) {
   var saveFileSuccess = $file.write({
     data: $data({
       string: content
     }),
     path: localDataFolder + fileName + ".txt"
   })
-  if (oldFileName && saveFileSuccess) {
-    var deleteFile = $file.delete(localDataFolder + oldFileName);
-    deleteFile ? true : !auto ? $ui.alert("删除旧文件失败") : false
-  }
   if (saveFileSuccess) {
     !auto ? $ui.toast("保存成功") : false;
   }
