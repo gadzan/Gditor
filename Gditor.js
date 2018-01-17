@@ -1,28 +1,29 @@
 /*
 gihub地址: https://github.com/gadzan/Gditor
 
-- 文章为txt格式，默认保存到JSbox本地
+- 文章为txt格式，默认保存到JSbox本地共享目录
 - 支持在文章页转换markdown为html并导出pdf
 - 支持导出txt格式文件
 - 支持分词，可选中区域长按空白处分词
 - 支持设置段前空格
 - 支持自动保存
 
+Todo
+
+- 设置隔行输入
+- 加密功能
+
 */
 const
-  version = 0.91,
+  version = 0.92,
   localImageFolder = "shared://imageStocker/",
   configFilePath = "drive://gditor.json";
-  returnBtnIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MzU4QzZGMjJGQjQyMTFFNzk2RjRCMzIxMjc1MjYxNjIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MzU4QzZGMjNGQjQyMTFFNzk2RjRCMzIxMjc1MjYxNjIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDozNThDNkYyMEZCNDIxMUU3OTZGNEIzMjEyNzUyNjE2MiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDozNThDNkYyMUZCNDIxMUU3OTZGNEIzMjEyNzUyNjE2MiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pogbd5AAAADqSURBVHjaYvz//z8DLQETA40BzS1gwSeZmJjIA6S2A/G3+fPnu1PVB1DD9wKxDRBzUDWIkAw3A+JzQOxLNQuwGO4IDJ5P5FrAiJxM0QwHAX5KDMdmwUsgJYYk/40IM0BqTgFxP9Axe2iRTLmA2AuINwIdWEFqEAkCXfWBQFJmA1JxQNwNTfagODuD1QdAiS9AyhnqZRDYCzRAAJ8FQD2/gHgOkFkLxCAHNuINIjRLjIixBArmQOPDhGAcYLFkIyHTgXp+QJk8REUykiVHgPgHTcoiqCW2I7u4HuYVDhngCN6iYjQOsAGAAAMAqK5dYjN94HUAAAAASUVORK5CYII="
+returnBtnIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MzU4QzZGMjJGQjQyMTFFNzk2RjRCMzIxMjc1MjYxNjIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MzU4QzZGMjNGQjQyMTFFNzk2RjRCMzIxMjc1MjYxNjIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDozNThDNkYyMEZCNDIxMUU3OTZGNEIzMjEyNzUyNjE2MiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDozNThDNkYyMUZCNDIxMUU3OTZGNEIzMjEyNzUyNjE2MiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pogbd5AAAADqSURBVHjaYvz//z8DLQETA40BzS1gwSeZmJjIA6S2A/G3+fPnu1PVB1DD9wKxDRBzUDWIkAw3A+JzQOxLNQuwGO4IDJ5P5FrAiJxM0QwHAX5KDMdmwUsgJYYk/40IM0BqTgFxP9Axe2iRTLmA2AuINwIdWEFqEAkCXfWBQFJmA1JxQNwNTfagODuD1QdAiS9AyhnqZRDYCzRAAJ8FQD2/gHgOkFkLxCAHNuINIjRLjIixBArmQOPDhGAcYLFkIyHTgXp+QJk8REUykiVHgPgHTcoiqCW2I7u4HuYVDhngCN6iYjQOsAGAAAMAqK5dYjN94HUAAAAASUVORK5CYII="
 var localDataFolder = "shared://gditor/";
 !$file.isDirectory(localDataFolder) ? $file.mkdir(localDataFolder) : false;
 !$file.isDirectory(localImageFolder) ? $file.mkdir(localImageFolder) : false;
 var config = $file.read(configFilePath),
   oldLinesNum = 0;
-if (!$cache.get("firstUse")) {
-  // 第一次使用
-  $cache.set("firstUse", true)
-}
 var configTamplate = {
   tabSpace: true,
   tabSpaceNum: 2,
@@ -355,21 +356,21 @@ const addNewChapterBtn = {
         placeholder: "请输入章节文件名(无需扩展名)",
         handler: function(chapterFileName) {
           chapterFileName = chapterFileName.split("\n")[0].replace(/(^\s*)|(\s*$)/g, "");
-          if(!$file.exists(localDataFolder + chapterFileName + ".txt")){
+          if (!$file.exists(localDataFolder + chapterFileName + ".txt")) {
             var newFileSuccess = $file.write({
               data: $data({ string: "  " }),
               path: localDataFolder + chapterFileName + ".txt"
             })
-            if(newFileSuccess){
-              $ui.toast(chapterFileName+".txt 创建成功");
+            if (newFileSuccess) {
+              $ui.toast(chapterFileName + ".txt 创建成功");
               chapters = $file.list(localDataFolder);
               listView.data = chapters;
-              var index = chapters.indexOf(chapterFileName+".txt");
+              var index = chapters.indexOf(chapterFileName + ".txt");
               editChapter($indexPath(index, index));
-            }else{
+            } else {
               $ui.toast("文件创建失败");
             }
-          }else{
+          } else {
             $ui.toast("文件已存在，请勿重复创建");
           }
         }
@@ -544,7 +545,7 @@ const fileListView = {
       {
         title: "删除",
         handler: function(sender, indexPath) {
-          var isFolder = $file.isDirectory(localDataFolder + chapters[indexPath.row]) ? "笔记本包含里面的所有文章，请注意备份" : "文章: "+chapters[indexPath.row];
+          var isFolder = $file.isDirectory(localDataFolder + chapters[indexPath.row]) ? "笔记本包含里面的所有文章，请注意备份" : "文章: " + chapters[indexPath.row];
           $ui.alert({
             title: "确认删除?",
             message: isFolder,
@@ -568,9 +569,13 @@ const fileListView = {
       {
         title: "导出",
         handler: function(sender, indexPath) {
-          var fileItem = $file.read(localDataFolder + chapters[indexPath.row])
-          // $ui.loading("处理中…");
-          $share.sheet([chapters[indexPath.row], fileItem])
+          if ($file.isDirectory(localDataFolder + chapters[indexPath.row])) {
+            zipFiles(localDataFolder + chapters[indexPath.row])
+          } else {
+            var fileItem = $file.read(localDataFolder + chapters[indexPath.row])
+            // $ui.loading("处理中…");
+            $share.sheet([chapters[indexPath.row], fileItem])
+          }
           // $ui.loading(false);
         }
       }
@@ -587,7 +592,7 @@ const fileListView = {
         //$console.info(localDataFolder.split('/'));
         chapters = $file.list(localDataFolder);
         prevFolder = findPrevFolder();
-        if(prevFolder!=localDataFolder){
+        if (prevFolder != localDataFolder) {
           $console.info(prevFolder);
         }
         if (chapters.length == 0) {
@@ -603,56 +608,57 @@ const fileListView = {
   }
 }
 
-function findPrevFolder(){
+function findPrevFolder() {
   curPathArr = localDataFolder.split('/');
-  curPathArr.splice(curPathArr.length-2,2);
+  curPathArr.splice(curPathArr.length - 2, 2);
   curPathArr.push("");
-  if(curPathArr.length < 4){
+  if (curPathArr.length < 4) {
+    $ui.toast("已到根目录");
     prevFolder = localDataFolder;
-  }else{
+  } else {
     prevFolder = curPathArr.join("/")
   }
   return prevFolder;
 }
 
-function renameFile(indexPath){
+function renameFile(indexPath) {
   oldName = chapters[indexPath.row];
   $input.text({
     type: $kbType.default,
     placeholder: oldName,
     handler: function(newName) {
       newName = newName.replace(/(^\s*)|(\s*$)/g, "");
-      if($file.isDirectory(localDataFolder + oldName)){
-        if(!$file.isDirectory(localDataFolder + newName)){
-          if($file.mkdir(localDataFolder + newName)){
+      if ($file.isDirectory(localDataFolder + oldName)) {
+        if (!$file.isDirectory(localDataFolder + newName)) {
+          if ($file.mkdir(localDataFolder + newName)) {
             var renameSuccess = $file.move({
               src: localDataFolder + oldName,
               dst: localDataFolder + newName
             })
-            if(renameSuccess){
+            if (renameSuccess) {
               chapters = $file.list(localDataFolder);
               listView.data = chapters;
-            }else{
+            } else {
               $ui.toast("重命名失败")
             }
           }
-        }else{
-          $ui.toast(newName+"不能与原名"+oldName+"相同");
+        } else {
+          $ui.toast(newName + "不能与原名" + oldName + "相同");
         }
-      }else{
-        if(!$file.exists(localDataFolder + newName)){
+      } else {
+        if (!$file.exists(localDataFolder + newName)) {
           var renameSuccess = $file.move({
             src: localDataFolder + oldName,
             dst: localDataFolder + newName + ".txt"
           })
-          if(renameSuccess){
+          if (renameSuccess) {
             chapters = $file.list(localDataFolder);
             listView.data = chapters;
-          }else{
+          } else {
             $ui.toast("重命名失败")
           }
-        }else{
-          $ui.toast(newName+"不能与原名"+oldName+"相同");
+        } else {
+          $ui.toast(newName + "不能与原名" + oldName + "相同");
         }
       }
     }
@@ -989,7 +995,7 @@ function editChapter(indexPath) {
     name: "editor",
     page: {
       props: {
-        title: "文章编辑器",
+        title: fileName,
       },
       views: [{
           type: "text",
@@ -1060,6 +1066,46 @@ function editChapter(indexPath) {
   oldLinesNum = $("editor").text.match(/\n/gm).length;
 }
 
+function loopAllFiles(filePath){
+  var files = [];
+  var list = $file.list(filePath);
+  list.map((item,idx)=>{
+    if($file.isDirectory(filePath+"/"+item)){
+      loopAllFiles(filePath+"/"+item)
+    }else{
+      files.push(filePath+"/"+item);
+    }
+  })
+  return files;
+}
+
+function zipFiles(filePath) {
+  $ui.toast("正在打包文件夹");
+  var dest = "output.zip";
+  var filePaths = loopAllFiles(filePath);
+  var files = [];
+  if(filePaths.length!=0){
+    $ui.loading(true);
+    filePaths.map(item => {
+      files.push($file.read(item))
+    });
+    $archiver.zip({
+      files: files,
+      dest: dest,
+      handler: function(success) {
+        $ui.loading(false);
+        if (success) {
+          $share.sheet([dest, $file.read(dest)])
+        } else {
+          $ui.toast("操作失败")
+        }
+      }
+    })
+  }else{
+    $ui.toast("没有可打包导出的文件")
+  }
+}
+
 function addChapter(chapterName) {
   chapters.unshift(chapterName);
   saveFile(chapterName, "")
@@ -1073,14 +1119,19 @@ function deleteFile(indexPath) {
     var deleteFile = $file.delete(localDataFolder + fileName)
     if (deleteFile) {
       chapters = $file.list(localDataFolder);
-      listView.data = chapters;
+      if (chapters.length == 0) {
+        listView.data = [""];
+        listView.delete(0)
+      } else {
+        listView.data = chapters;
+      }
       $ui.toast("已删除");
     }
   }
 }
 
 function processSave(indexPath, fileName, auto) {
-  fileName = fileName.replace(/(\.txt)/g,"");
+  fileName = fileName.replace(/(\.txt)/g, "");
   saveFile(fileName, $("editor").text, auto);
   chapters = $file.list(localDataFolder);
   listView.data = chapters;
@@ -1100,6 +1151,15 @@ function saveFile(fileName, content, auto) {
 
 function markdown2html(text) {
   $ui.loading("处理中…");
+  /*
+  var $pageSize = {
+  letter: 0, governmentLetter: 1, legal: 2, juniorLegal: 3, ledger: 4, tabloid: 5,
+  A0: 6, A1: 7, A2: 8, A3: 9, A4: 10, A5: 11, A6: 12, A7: 13, A8: 14, A9: 15, A10: 16,
+  B0: 17, B1: 18, B2: 19, B3: 20, B4: 21, B5: 22, B6: 23, B7: 24, B8: 25, B9: 26, B10: 27,
+  C0: 28, C1: 29, C2: 30, C3: 31, C4: 32, C5: 33, C6: 34, C7: 35, C8: 36, C9: 37, C10: 38,
+  custom: 52
+}
+  */
   $http.post({
     url: "https://api.github.com/markdown",
     body: { text: text, mode: "gfm", context: "github/gollum" },
@@ -1114,14 +1174,24 @@ function markdown2html(text) {
           } else if (idx == 1) {
             $clipboard.html = html
           } else {
-            $pdf.make({
-              html: html,
-              handler: function(resp) {
-                if (resp.data) {
-                  $share.sheet(["sample.pdf", resp.data])
-                }
+            $ui.menu({
+              items: ['letter', 'governmentLetter', 'legal', 'juniorLegal', 'ledger', 'tabloid','A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'B0', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10','custom'],
+              handler: function(sizeTitle, idx) {
+                $pdf.make({
+                  html: html,
+                  pageSize: $pageSize[sizeTitle],
+                  handler: function(resp) {
+                    if (resp.data) {
+                      $share.sheet(["Gidotor-output.pdf", resp.data])
+                    }
+                  }
+                })
+              },
+              finished: function(cancelled) {
+            
               }
             })
+            
           }
         }
       })
@@ -1157,5 +1227,9 @@ function checkUpdate() {
 
 checkUpdate();
 renderMainPage();
+if ($cache.get("usedBefore")) {
+  // 第一次使用
+  $cache.set("usedBefore", true)
+}
 var listView = $("fileList");
 listView.data = chapters;
