@@ -5,17 +5,15 @@ gihub地址: https://github.com/gadzan/Gditor
 - 支持在文章页转换markdown为html并导出pdf
 - 支持导出txt格式文件
 - 支持分词，可选中区域长按空白处分词
-- 支持设置段前空格
+- 支持设置段前空格,隔行输入
 - 支持自动保存
 
 Todo
-
-- 设置隔行输入
 - 加密功能
 
 */
 const
-  version = 0.92,
+  version = 0.93,
   localImageFolder = "shared://imageStocker/",
   configFilePath = "drive://gditor.json";
 returnBtnIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MzU4QzZGMjJGQjQyMTFFNzk2RjRCMzIxMjc1MjYxNjIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MzU4QzZGMjNGQjQyMTFFNzk2RjRCMzIxMjc1MjYxNjIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDozNThDNkYyMEZCNDIxMUU3OTZGNEIzMjEyNzUyNjE2MiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDozNThDNkYyMUZCNDIxMUU3OTZGNEIzMjEyNzUyNjE2MiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pogbd5AAAADqSURBVHjaYvz//z8DLQETA40BzS1gwSeZmJjIA6S2A/G3+fPnu1PVB1DD9wKxDRBzUDWIkAw3A+JzQOxLNQuwGO4IDJ5P5FrAiJxM0QwHAX5KDMdmwUsgJYYk/40IM0BqTgFxP9Axe2iRTLmA2AuINwIdWEFqEAkCXfWBQFJmA1JxQNwNTfagODuD1QdAiS9AyhnqZRDYCzRAAJ8FQD2/gHgOkFkLxCAHNuINIjRLjIixBArmQOPDhGAcYLFkIyHTgXp+QJk8REUykiVHgPgHTcoiqCW2I7u4HuYVDhngCN6iYjQOsAGAAAMAqK5dYjN94HUAAAAASUVORK5CYII="
@@ -23,10 +21,13 @@ var localDataFolder = "shared://gditor/";
 !$file.isDirectory(localDataFolder) ? $file.mkdir(localDataFolder) : false;
 !$file.isDirectory(localImageFolder) ? $file.mkdir(localImageFolder) : false;
 var config = $file.read(configFilePath),
-  oldLinesNum = 0;
+  curPath = "",
+  oldLinesNum = 0,
+  folderMode = false;
 var configTamplate = {
   tabSpace: true,
   tabSpaceNum: 2,
+  interlaced: false,
   autoSaver: true
 };
 if (config) {
@@ -42,7 +43,7 @@ if (config) {
   var LocalConfig = configTamplate;
   saveConfig()
 };
-var chapters = $file.list(localDataFolder)
+var chapters = $file.list(localDataFolder);
 
 const tabEveryLineSwitch = {
   type: "view",
@@ -73,7 +74,7 @@ const tabEveryLineSwitch = {
       events: {
         changed: function(sender) {
           LocalConfig.tabSpace = sender.on;
-          $("tabEveryLineLabel").textColor = sender.on ? $color("#HHHHHH") : $color("#AAAAAA");
+          $("tabEveryLineLabel").textColor = sender.on ? $color("#000000") : $color("#AAAAAA");
           saveConfig()
         }
       }
@@ -157,7 +158,7 @@ const autoSaverSwitch = {
       events: {
         changed: function(sender) {
           LocalConfig.autoSaver = sender.on;
-          $("autoSaverLabel").textColor = sender.on ? $color("#HHHHHH") : $color("#AAAAAA");
+          $("autoSaverLabel").textColor = sender.on ? $color("#000000") : $color("#AAAAAA");
           saveConfig()
         }
       }
@@ -165,6 +166,95 @@ const autoSaverSwitch = {
   ],
   layout: $layout.fill
 }
+
+const interlacedSwitch = {
+  type: "view",
+  props: {
+
+  },
+  views: [{
+      type: "label",
+      props: {
+        id: "interlacedLabel",
+        text: "隔行输入"
+      },
+      layout: function(make, view) {
+        make.left.inset(10);
+        make.centerY.equalTo(view.super);
+      }
+    },
+    {
+      type: "switch",
+      props: {
+        id: "interlacedChecker",
+        on: LocalConfig.interlaced
+      },
+      layout: function(make, view) {
+        make.right.inset(10);
+        make.centerY.equalTo(view.super);
+      },
+      events: {
+        changed: function(sender) {
+          LocalConfig.interlaced = sender.on;
+          $("interlacedLabel").textColor = sender.on ? $color("#000000") : $color("#AAAAAA");
+          saveConfig()
+        }
+      }
+    }
+  ],
+  layout: $layout.fill
+}
+
+const feedbacksArray = [{
+  title: "邮件",
+  text: "gadzan@qq.com",
+  url: "mailto:gadzan@qq.com"
+},{
+  title: "Telegram",
+  text: "@gadzan",
+  url: "http://t.me/gadzan"
+},{
+  title: "微博",
+  text: "@gadzan",
+  url: "weibo://userinfo?uid=gadzan"
+}]
+
+feedbacks = feedbacksArray.map(item => {
+  return {
+    type: "view",
+    props: {
+  
+    },
+    views: [{
+        type: "label",
+        props: {
+          text: item.title
+        },
+        layout: function(make, view) {
+          make.left.inset(10);
+          make.centerY.equalTo(view.super);
+        }
+      },
+      {
+        type: "label",
+        props: {
+          text: item.text,
+          textColor: $color("#AAAAAA")
+        },
+        layout: function(make, view) {
+          make.right.inset(10);
+          make.centerY.equalTo(view.super);
+        }
+      }
+    ],
+    layout: $layout.fill,
+    events: {
+      tapped: function(){
+        $app.openURL(item.url)
+      }
+    }
+  }
+})
 
 const settingListView = {
   type: "list",
@@ -175,14 +265,29 @@ const settingListView = {
         rows: [
           tabEveryLineSwitch,
           tabEveryLineNum,
+          interlacedSwitch,
           autoSaverSwitch
         ]
       },
       {
         title: "其他设置",
-        rows: [""]
+        rows: ["加密 - 正在开发中..."]
+      },
+      {
+        title: "反馈",
+        rows: feedbacks
       }
-    ]
+    ],
+    footer: {
+      type: "label",
+      props: {
+        height: 40,
+        text: `Version:${version} ©️Gadzan`,
+        textColor: $color("#AAAAAA"),
+        align: $align.center,
+        font: $font(12)
+      }
+    }
   },
   layout: function(make, view) {
     make.size.equalTo(view.super)
@@ -331,8 +436,28 @@ const returnBtn = {
   events: {
     tapped: function(sender) {
       localDataFolder = findPrevFolder();
-      chapters = $file.list(localDataFolder);
+      chapters = folderMode ? $file.list(localDataFolder).filter(item => {
+        return $file.isDirectory(localDataFolder + item) ? item : false;
+      }) : $file.list(localDataFolder);
       listView.data = chapters;
+    }
+  }
+}
+
+const moveFileSelectionBtn = {
+  type: "button",
+  props: {
+    id: "moveFileSelectionBtn",
+    title: "移到这里"
+  },
+  layout: function(make, view) {
+    make.top.inset(6);
+    make.centerX.equalTo(view.super);
+    make.size.equalTo($size(90, 32));
+  },
+  events: {
+    tapped: function(sender) {
+      moveFile();
     }
   }
 }
@@ -537,6 +662,12 @@ const fileListView = {
       }
     },
     actions: [{
+        title: "移动",
+        handler: function(sender, indexPath) {
+          renderFolderList(indexPath)
+        }
+      },
+      {
         title: "重命名",
         handler: function(sender, indexPath) {
           renameFile(indexPath)
@@ -588,23 +719,33 @@ const fileListView = {
   events: {
     didSelect: function(sender, indexPath, data) {
       if ($file.isDirectory(localDataFolder + data)) {
+        // Folder selected
+        $("mainView").title = data;
         localDataFolder = localDataFolder + data + "/";
-        //$console.info(localDataFolder.split('/'));
-        chapters = $file.list(localDataFolder);
+        chapters = folderMode ? $file.list(localDataFolder).filter(item => {
+          return $file.isDirectory(localDataFolder + item) ? item : false;
+        }) : $file.list(localDataFolder);
         prevFolder = findPrevFolder();
-        if (prevFolder != localDataFolder) {
-          $console.info(prevFolder);
-        }
-        if (chapters.length == 0) {
-          listView.data = [""];
-          listView.delete(0)
-        } else {
-          listView.data = chapters;
-        }
+        refreshList(chapters, listView);
       } else {
+        // File selected
         editChapter(indexPath)
+        try{
+          var oldLinesNum = sender.text.match(/\n/gm).length;
+        }catch(e){
+          var oldLinesNum = 0
+        }
       }
     }
+  }
+}
+
+function refreshList(data, view) {
+  if (data.length == 0) {
+    view.data = [""];
+    view.delete(0)
+  } else {
+    view.data = data;
   }
 }
 
@@ -621,8 +762,41 @@ function findPrevFolder() {
   return prevFolder;
 }
 
+function renderFolderList(indexPath) {
+  var fileName = chapters[indexPath.row];
+  curPath = localDataFolder + fileName;
+  $("mainView").add(moveFileSelectionBtn);
+  folderMode = true;
+  chapters = $file.list(localDataFolder).filter(item => {
+    return $file.isDirectory(localDataFolder + item) ? item : false;
+  })
+  listView.data = chapters;
+}
+
+function moveFile() {
+  var fileName = curPath.split("/")[curPath.split("/").length - 1]
+  var dstPath = localDataFolder + fileName;
+  if (!$file.exists(dstPath) && !$file.isDirectory(dstPath)) {
+    var moveSuccess = $file.move({
+      src: curPath,
+      dst: dstPath
+    })
+    if (moveSuccess) {
+      $ui.toast("已移动到" + localDataFolder.split("/")[localDataFolder.split("/").length - 2]);
+    } else {
+      $ui.toast("移动失败");
+    }
+  } else {
+    $ui.toast("目标文件(夹)已存在")
+  }
+  chapters = $file.list(localDataFolder);
+  folderMode = false;
+  refreshList(chapters, listView);
+  $("moveFileSelectionBtn").remove()
+}
+
 function renameFile(indexPath) {
-  oldName = chapters[indexPath.row];
+  var oldName = chapters[indexPath.row];
   $input.text({
     type: $kbType.default,
     placeholder: oldName,
@@ -962,6 +1136,7 @@ function getFileContent(fileName) {
 function renderMainPage() {
   $ui.render({
     props: {
+      id: "mainView",
       title: "文章编辑器",
     },
     views: [
@@ -975,17 +1150,26 @@ function renderMainPage() {
 }
 
 function tabSpaceProcess(sender) {
-  var newLinesNum = sender.text.match(/\n/gm).length;
+  try{
+    var newLinesNum = sender.text.match(/\n/gm).length;
+  }catch(e){
+    var newLinesNum = 0
+  }
   if (newLinesNum > oldLinesNum) {
-    var space = "";
+    var space = "" + (LocalConfig.interlaced ? "\n" : "")
     for (var i = 0; i < parseInt(LocalConfig.tabSpaceNum); i++) {
       space = space + " "
     }
     var cur = $("editor").selectedRange
     sender.text = sender.text.slice(0, cur.location) + space + sender.text.slice(cur.location)
-    $("editor").selectedRange = $range(cur.location + parseInt(LocalConfig.tabSpaceNum), 0)
+    $("editor").selectedRange = $range(cur.location + parseInt(LocalConfig.tabSpaceNum) + (LocalConfig.interlaced ? 1 : 0), 0)
+    oldLinesNum = newLinesNum;
+    if(LocalConfig.interlaced){
+      oldLinesNum = oldLinesNum + 1
+    }
+  }else{
+    oldLinesNum = newLinesNum;
   }
-  oldLinesNum = newLinesNum;
 }
 
 function editChapter(indexPath) {
@@ -1066,14 +1250,14 @@ function editChapter(indexPath) {
   oldLinesNum = $("editor").text.match(/\n/gm).length;
 }
 
-function loopAllFiles(filePath){
+function loopAllFiles(filePath) {
   var files = [];
   var list = $file.list(filePath);
-  list.map((item,idx)=>{
-    if($file.isDirectory(filePath+"/"+item)){
-      loopAllFiles(filePath+"/"+item)
-    }else{
-      files.push(filePath+"/"+item);
+  list.map((item, idx) => {
+    if ($file.isDirectory(filePath + "/" + item)) {
+      loopAllFiles(filePath + "/" + item)
+    } else {
+      files.push(filePath + "/" + item);
     }
   })
   return files;
@@ -1084,7 +1268,7 @@ function zipFiles(filePath) {
   var dest = "output.zip";
   var filePaths = loopAllFiles(filePath);
   var files = [];
-  if(filePaths.length!=0){
+  if (filePaths.length != 0) {
     $ui.loading(true);
     filePaths.map(item => {
       files.push($file.read(item))
@@ -1101,7 +1285,7 @@ function zipFiles(filePath) {
         }
       }
     })
-  }else{
+  } else {
     $ui.toast("没有可打包导出的文件")
   }
 }
@@ -1119,12 +1303,7 @@ function deleteFile(indexPath) {
     var deleteFile = $file.delete(localDataFolder + fileName)
     if (deleteFile) {
       chapters = $file.list(localDataFolder);
-      if (chapters.length == 0) {
-        listView.data = [""];
-        listView.delete(0)
-      } else {
-        listView.data = chapters;
-      }
+      refreshList(chapters, listView);
       $ui.toast("已删除");
     }
   }
@@ -1175,7 +1354,7 @@ function markdown2html(text) {
             $clipboard.html = html
           } else {
             $ui.menu({
-              items: ['letter', 'governmentLetter', 'legal', 'juniorLegal', 'ledger', 'tabloid','A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'B0', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10','custom'],
+              items: ['letter', 'governmentLetter', 'legal', 'juniorLegal', 'ledger', 'tabloid', 'A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'B0', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'custom'],
               handler: function(sizeTitle, idx) {
                 $pdf.make({
                   html: html,
@@ -1188,10 +1367,10 @@ function markdown2html(text) {
                 })
               },
               finished: function(cancelled) {
-            
+
               }
             })
-            
+
           }
         }
       })
