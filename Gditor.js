@@ -1,22 +1,20 @@
 /*
 gihub地址: https://github.com/gadzan/Gditor
 
-- 本扩展完全基于JSbox
 - 文章为txt格式，默认保存到JSbox本地共享目录
-## 支持
-- 本地管理文章，创建笔记本(文件夹)
-- 在文章页转换markdown为html并导出pdf（文本框上第2个工具）
-- 导出txt格式文件，导出批量导出文件夹到压缩文件(解压后文件名会乱码...)
-- 支持分词，可选中区域长按空白处分词，或者直接按文本框上第3个工具
+- 支持在文章页转换markdown为html并导出pdf
+- 支持导出txt格式文件
+- 支持分词，可选中区域长按空白处分词
 - 支持设置段前空格,隔行输入
-- 支持自动保存，默认每隔20秒保存一次，结束编辑时也会自动保存。
+- 支持自动保存
 
 Todo
+- 导入功能
 - 加密功能
 
 */
 const
-  version = 0.93,
+  version = 0.95,
   localImageFolder = "shared://imageStocker/",
   configFilePath = "drive://gditor.json";
 returnBtnIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MzU4QzZGMjJGQjQyMTFFNzk2RjRCMzIxMjc1MjYxNjIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MzU4QzZGMjNGQjQyMTFFNzk2RjRCMzIxMjc1MjYxNjIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDozNThDNkYyMEZCNDIxMUU3OTZGNEIzMjEyNzUyNjE2MiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDozNThDNkYyMUZCNDIxMUU3OTZGNEIzMjEyNzUyNjE2MiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pogbd5AAAADqSURBVHjaYvz//z8DLQETA40BzS1gwSeZmJjIA6S2A/G3+fPnu1PVB1DD9wKxDRBzUDWIkAw3A+JzQOxLNQuwGO4IDJ5P5FrAiJxM0QwHAX5KDMdmwUsgJYYk/40IM0BqTgFxP9Axe2iRTLmA2AuINwIdWEFqEAkCXfWBQFJmA1JxQNwNTfagODuD1QdAiS9AyhnqZRDYCzRAAJ8FQD2/gHgOkFkLxCAHNuINIjRLjIixBArmQOPDhGAcYLFkIyHTgXp+QJk8REUykiVHgPgHTcoiqCW2I7u4HuYVDhngCN6iYjQOsAGAAAMAqK5dYjN94HUAAAAASUVORK5CYII="
@@ -212,11 +210,11 @@ const feedbacksArray = [{
   title: "邮件",
   text: "gadzan@qq.com",
   url: "mailto:gadzan@qq.com"
-},{
+}, {
   title: "Telegram",
   text: "@gadzan",
   url: "http://t.me/gadzan"
-},{
+}, {
   title: "微博",
   text: "@gadzan",
   url: "weibo://userinfo?uid=gadzan"
@@ -226,7 +224,7 @@ feedbacks = feedbacksArray.map(item => {
   return {
     type: "view",
     props: {
-  
+
     },
     views: [{
         type: "label",
@@ -252,7 +250,7 @@ feedbacks = feedbacksArray.map(item => {
     ],
     layout: $layout.fill,
     events: {
-      tapped: function(){
+      tapped: function() {
         $app.openURL(item.url)
       }
     }
@@ -733,9 +731,9 @@ const fileListView = {
       } else {
         // File selected
         editChapter(indexPath)
-        try{
+        try {
           var oldLinesNum = sender.text.match(/\n/gm).length;
-        }catch(e){
+        } catch (e) {
           var oldLinesNum = 0
         }
       }
@@ -798,6 +796,10 @@ function moveFile() {
   $("moveFileSelectionBtn").remove()
 }
 
+function alertMsg(msg) {
+  $ui.alert(msg)
+}
+
 function renameFile(indexPath) {
   var oldName = chapters[indexPath.row];
   $input.text({
@@ -806,24 +808,33 @@ function renameFile(indexPath) {
     handler: function(newName) {
       newName = newName.replace(/(^\s*)|(\s*$)/g, "");
       if ($file.isDirectory(localDataFolder + oldName)) {
+        if (oldName == newName) {
+          $ui.alert("不能与原名相同")
+          return false;
+        }
         if (!$file.isDirectory(localDataFolder + newName)) {
-          if ($file.mkdir(localDataFolder + newName)) {
-            var renameSuccess = $file.move({
-              src: localDataFolder + oldName,
-              dst: localDataFolder + newName
-            })
-            if (renameSuccess) {
-              chapters = $file.list(localDataFolder);
-              listView.data = chapters;
-            } else {
-              $ui.toast("重命名失败")
-            }
+          //if ($file.mkdir(localDataFolder + newName)) {
+          var renameSuccess = $file.move({
+            src: localDataFolder + oldName,
+            dst: localDataFolder + newName
+          })
+          if (renameSuccess) {
+            chapters = $file.list(localDataFolder);
+            listView.data = chapters;
+          } else {
+            $ui.alert("重命名失败")
           }
+          //}
         } else {
-          $ui.toast(newName + "不能与原名" + oldName + "相同");
+          $ui.alert(newName + " 已存在");
         }
       } else {
-        if (!$file.exists(localDataFolder + newName)) {
+        if (oldName == (newName + ".txt")) {
+          $ui.alert("不能与原名相同")
+          return false;
+        }
+        if (!$file.exists(localDataFolder + newName + ".txt")) {
+
           var renameSuccess = $file.move({
             src: localDataFolder + oldName,
             dst: localDataFolder + newName + ".txt"
@@ -832,10 +843,10 @@ function renameFile(indexPath) {
             chapters = $file.list(localDataFolder);
             listView.data = chapters;
           } else {
-            $ui.toast("重命名失败")
+            $ui.alert("重命名失败")
           }
         } else {
-          $ui.toast(newName + "不能与原名" + oldName + "相同");
+          $ui.alert(newName + ".txt" + " 不能与原名 " + oldName + " 相同");
         }
       }
     }
@@ -1153,9 +1164,9 @@ function renderMainPage() {
 }
 
 function tabSpaceProcess(sender) {
-  try{
+  try {
     var newLinesNum = sender.text.match(/\n/gm).length;
-  }catch(e){
+  } catch (e) {
     var newLinesNum = 0
   }
   if (newLinesNum > oldLinesNum) {
@@ -1167,11 +1178,29 @@ function tabSpaceProcess(sender) {
     sender.text = sender.text.slice(0, cur.location) + space + sender.text.slice(cur.location)
     $("editor").selectedRange = $range(cur.location + parseInt(LocalConfig.tabSpaceNum) + (LocalConfig.interlaced ? 1 : 0), 0)
     oldLinesNum = newLinesNum;
-    if(LocalConfig.interlaced){
+    if (LocalConfig.interlaced) {
       oldLinesNum = oldLinesNum + 1
     }
-  }else{
+  } else {
     oldLinesNum = newLinesNum;
+  }
+}
+
+const preView = {
+
+  type: "text",
+  props: {
+    id: "preView",
+    //borderWidth: 1,
+    //borderColor: $color("#AAAAAA"),
+    //radius: 5,
+    editable: false
+    //html: $("editor").text
+  },
+  layout: function(make, view) {
+    make.left.right.inset(5);
+    make.bottom.inset(10)
+    make.top.equalTo(view.prev.bottom).offset(10)
   }
 }
 
@@ -1194,7 +1223,8 @@ function editChapter(indexPath) {
             text: getFileContent(fileName)
           },
           layout: function(make, view) {
-            make.left.right.bottom.inset(5);
+            make.left.bottom.right.inset(5);
+
             make.top.inset(42)
           },
           events: {
@@ -1202,6 +1232,9 @@ function editChapter(indexPath) {
               sender.focus()
             },
             didBeginEditing: function(sender) {
+              sender.updateLayout(function(make) {
+                make.bottom.inset(300)
+              })
               timer = $timer.schedule({
                 interval: 20,
                 handler: function() {
@@ -1211,6 +1244,9 @@ function editChapter(indexPath) {
 
             },
             didEndEditing: function(sender) {
+              sender.updateLayout(function(make) {
+                make.bottom.inset(5)
+              })
               timer.invalidate()
               LocalConfig.autoSaver ? processSave(indexPath, fileName, true) : false;
             },
@@ -1224,6 +1260,7 @@ function editChapter(indexPath) {
             }
           }
         },
+        //preView,
         {
           type: "button",
           props: {
@@ -1352,6 +1389,7 @@ function markdown2html(text) {
         items: ["预览结果", "拷贝到剪贴板", "创建 PDF 文件"],
         handler: function(title, idx) {
           if (idx == 0) {
+            //$("preView").html = html;
             $quicklook.open({ html: html })
           } else if (idx == 1) {
             $clipboard.html = html
@@ -1369,11 +1407,8 @@ function markdown2html(text) {
                   }
                 })
               },
-              finished: function(cancelled) {
-
-              }
+              finished: function(cancelled) {}
             })
-
           }
         }
       })
@@ -1409,8 +1444,9 @@ function checkUpdate() {
 
 checkUpdate();
 renderMainPage();
+
 if ($cache.get("usedBefore")) {
-  // 第一次使用
+  //$console.info("fisrtuse");
   $cache.set("usedBefore", true)
 }
 var listView = $("fileList");
