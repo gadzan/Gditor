@@ -5,16 +5,17 @@ gihub地址: https://github.com/gadzan/Gditor
 - 支持在文章页转换markdown为html并导出pdf
 - 支持导出txt格式文件
 - 支持分词，可选中区域长按空白处分词
+- 支持sm.ms图床
 - 支持设置段前空格,隔行输入
 - 支持自动保存
+- 支持导入.txt .zip文件
 
 Todo
-- 导入功能
 - 加密功能
 
 */
 const
-  version = 0.96,
+  version = 0.97,
   localImageFolder = "shared://imageStocker/",
   configFilePath = "drive://gditor.json";
 returnBtnIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MzU4QzZGMjJGQjQyMTFFNzk2RjRCMzIxMjc1MjYxNjIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MzU4QzZGMjNGQjQyMTFFNzk2RjRCMzIxMjc1MjYxNjIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDozNThDNkYyMEZCNDIxMUU3OTZGNEIzMjEyNzUyNjE2MiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDozNThDNkYyMUZCNDIxMUU3OTZGNEIzMjEyNzUyNjE2MiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pogbd5AAAADqSURBVHjaYvz//z8DLQETA40BzS1gwSeZmJjIA6S2A/G3+fPnu1PVB1DD9wKxDRBzUDWIkAw3A+JzQOxLNQuwGO4IDJ5P5FrAiJxM0QwHAX5KDMdmwUsgJYYk/40IM0BqTgFxP9Axe2iRTLmA2AuINwIdWEFqEAkCXfWBQFJmA1JxQNwNTfagODuD1QdAiS9AyhnqZRDYCzRAAJ8FQD2/gHgOkFkLxCAHNuINIjRLjIixBArmQOPDhGAcYLFkIyHTgXp+QJk8REUykiVHgPgHTcoiqCW2I7u4HuYVDhngCN6iYjQOsAGAAAMAqK5dYjN94HUAAAAASUVORK5CYII="
@@ -134,6 +135,7 @@ const tabEveryLineNum = {
   ],
   layout: $layout.fill
 }
+
 const autoSaverSwitch = {
   type: "view",
   props: {
@@ -210,6 +212,44 @@ const interlacedSwitch = {
   layout: $layout.fill
 }
 
+const importFilesSetting = {
+  type: "view",
+  props: {
+
+  },
+  views: [{
+      type: "label",
+      props: {
+        id: "interlacedLabel",
+        text: "导入文章"
+      },
+      layout: function(make, view) {
+        make.left.inset(15);
+        make.centerY.equalTo(view.super);
+      }
+    },
+    {
+      type: "switch",
+      props: {
+        id: "interlacedChecker",
+        on: LocalConfig.interlaced
+      },
+      layout: function(make, view) {
+        make.right.inset(15);
+        make.centerY.equalTo(view.super);
+      },
+      events: {
+        changed: function(sender) {
+          LocalConfig.interlaced = sender.on;
+          $("interlacedLabel").textColor = sender.on ? $color("#000000") : $color("#AAAAAA");
+          saveConfig()
+        }
+      }
+    }
+  ],
+  layout: $layout.fill
+}
+
 const feedbacksArray = [{
   title: "邮件",
   text: "gadzan@qq.com",
@@ -224,7 +264,7 @@ const feedbacksArray = [{
   url: "weibo://userinfo?uid=gadzan"
 }]
 
-feedbacks = feedbacksArray.map(item => {
+const feedbacks = feedbacksArray.map(item => {
   return {
     type: "view",
     props: {
@@ -265,6 +305,7 @@ const settingListView = {
   type: "list",
   props: {
     id: "settingList",
+    title: "编辑器",
     data: [{
         title: "编辑器设置",
         rows: [
@@ -276,7 +317,10 @@ const settingListView = {
       },
       {
         title: "其他设置",
-        rows: ["加密 - 正在开发中..."]
+        rows: [
+          "导入文章",
+          "加密 - 正在开发中..."
+        ]
       },
       {
         title: "反馈",
@@ -296,6 +340,13 @@ const settingListView = {
   },
   layout: function(make, view) {
     make.size.equalTo(view.super)
+  },
+  events: {
+    didSelect: function(sender, indexPath, title){
+      if(title=="导入文章"){
+        listInboxFiles()
+      }
+    }
   }
 }
 
@@ -418,11 +469,16 @@ const settingBtn = {
   events: {
     tapped: function(sender) {
       $ui.push(settingPage.page);
-      $("tabSpaceChecker").on = LocalConfig.tabSpace;
-      $("tabSpaceNumLabel").text = LocalConfig.tabSpaceNum.toString()
-      $("tabSpaceNumStepper").value = LocalConfig.tabSpaceNum
-      $("autoSaverChecker").on = LocalConfig.autoSaver
-      $("interlacedSwitch").on = LocalConfig.interlaced
+      $thread.background({
+        delay: 0,
+        handler: function() {
+          $("tabSpaceChecker").on = LocalConfig.tabSpace;
+          $("tabSpaceNumLabel").text = LocalConfig.tabSpaceNum.toString()
+          $("tabSpaceNumStepper").value = LocalConfig.tabSpaceNum
+          $("autoSaverChecker").on = LocalConfig.autoSaver
+          $("interlacedSwitch").on = LocalConfig.interlaced
+        }
+      })
     }
   }
 }
@@ -747,6 +803,20 @@ const fileListView = {
   }
 }
 
+const mainView = {
+  type: "view",
+  props: {
+    id: "mainView",
+  },
+  views: [
+    settingBtn,
+    returnBtn,
+    addNewChapterBtn,
+    makeNewFolderBtn,
+    fileListView
+  ]
+}
+
 function refreshList(data, view) {
   if (data.length == 0) {
     view.data = [""];
@@ -791,10 +861,10 @@ function moveFile() {
     if (moveSuccess) {
       $ui.toast("已移动到" + localDataFolder.split("/")[localDataFolder.split("/").length - 2]);
     } else {
-      $ui.toast("移动失败");
+      $ui.alert("移动失败");
     }
   } else {
-    $ui.toast("目标文件(夹)已存在")
+    $ui.alert("目标文件(夹)已存在")
   }
   chapters = $file.list(localDataFolder);
   folderMode = false;
@@ -802,8 +872,10 @@ function moveFile() {
   $("moveFileSelectionBtn").remove()
 }
 
-function alertMsg(msg) {
-  $ui.alert(msg)
+function checkFirstUse() {
+  if ($cache.get("usedBefore")) {
+    $cache.set("usedBefore", true)
+  }
 }
 
 function renameFile(indexPath) {
@@ -856,6 +928,107 @@ function renameFile(indexPath) {
         }
       }
     }
+  })
+}
+
+function listInboxFiles(){
+  let inboxFiles = $file.list("inbox://");
+  let importZipFilePath = "shared://gditor/导入的文章"
+  $ui.push({
+    views: [{
+      type: "list",
+      props: {
+        id: "inboxList",
+        data: inboxFiles
+      },
+      layout: $layout.fill,
+      events: {
+        didSelect: function(sender, indexPath){
+          let fileName = inboxFiles[indexPath.row]
+          let path = "inbox://" + fileName;
+          let fileExt = fileName.split(".").pop()
+          function deleteFile(){
+            $file.delete(path)
+            sender.delete(indexPath)
+          }
+          $ui.menu({
+            items: ["导入后删除","直接删除"],
+            handler: function(title, index){
+              switch(index){
+                case 0:
+                  let fileData = $file.read(path);
+                  if(fileExt == "txt"){
+                    //$console.info("txt文件");
+                    if($file.exists(importZipFilePath + fileName)){
+                      $ui.alert({
+                        title: "导入失败",
+                        message: "文章已存在",
+                      })
+                      return false;
+                    }
+                    var importFileSuccess = $file.write({
+                      data: $data({
+                        string: fileData.string
+                      }),
+                      path: importZipFilePath + fileName
+                    });
+                    if(importFileSuccess){
+                      $ui.toast(`导入 ${fileName} 成功`)
+                      deleteFile();
+                      chapters = $file.list(localDataFolder);
+                      refreshList(chapters, listView);
+                    }else{
+                      $ui.alert(`导入 ${fileName} 失败`)
+                    }
+                  }else if(fileExt == "zip"){
+                    $ui.alert({
+                      title: "⚠️请注意⚠️",
+                      message: "解压后会自动覆盖命名重复的文件，请确认：",
+                      actions: [
+                        {
+                          title: "确认",
+                          handler: function() {
+                            $ui.loading(true);
+                            $ui.toast(`正在解压 ${fileName}`)
+                            !$file.isDirectory(localDataFolder) ? $file.mkdir(localDataFolder) : false;
+                            $archiver.unzip({
+                              file: fileData,
+                              dest: importZipFilePath,
+                              handler: function(success) {
+                                $ui.loading(false);
+                                if(success){
+                                  $ui.toast(`解压 ${fileName} 成功`)
+                                  deleteFile();
+                                  chapters = $file.list(localDataFolder);
+                                  refreshList(chapters, listView);
+                                }else{
+                                  $ui.alert(`解压 ${fileName} 失败`)
+                                }
+                              }
+                            })
+                          }
+                        },
+                        {
+                          title: "取消",
+                          handler: function() {
+                            $ui.toast("已取消导入")
+                          }
+                        }
+                      ]
+                    })
+                  }else{
+                    $ui.toast("暂不支持此格式文件导入")
+                  }
+                break;
+                case 1:
+                  deleteFile();
+                break;
+              }
+            }
+          })
+        }
+      }
+    }]
   })
 }
 
@@ -1154,19 +1327,7 @@ function getFileContent(fileName) {
 }
 
 function renderMainPage() {
-  $ui.render({
-    props: {
-      id: "mainView",
-      title: "文章编辑器",
-    },
-    views: [
-      settingBtn,
-      returnBtn,
-      addNewChapterBtn,
-      makeNewFolderBtn,
-      fileListView
-    ]
-  })
+  $ui.render(mainView)
 }
 
 function tabSpaceProcess(sender) {
@@ -1189,24 +1350,6 @@ function tabSpaceProcess(sender) {
     }
   } else {
     oldLinesNum = newLinesNum;
-  }
-}
-
-const preView = {
-
-  type: "text",
-  props: {
-    id: "preView",
-    //borderWidth: 1,
-    //borderColor: $color("#AAAAAA"),
-    //radius: 5,
-    editable: false
-    //html: $("editor").text
-  },
-  layout: function(make, view) {
-    make.left.right.inset(5);
-    make.bottom.inset(10)
-    make.top.equalTo(view.prev.bottom).offset(10)
   }
 }
 
@@ -1291,7 +1434,6 @@ function editChapter(indexPath) {
       ]
     }
   }
-
   $ui.push(editorView.page);
   oldLinesNum = $("editor").text.match(/\n/gm).length;
 }
@@ -1447,13 +1589,17 @@ function checkUpdate() {
     }
   })
 }
+function detectImportFiles(){
+  if($context.dataItems){
+    $ui.alert("暂不支持运行本扩展导入文件，导入文件请直接选择 拷贝到“JSBox”，而后进入设置->导入进行导入操作。")
+    //var importFiles = $context.dataItems;
+    //importFiles[0].info.mimeType=="text/plain"
+  }
+}
 
 checkUpdate();
 renderMainPage();
-
-if ($cache.get("usedBefore")) {
-  //$console.info("fisrtuse");
-  $cache.set("usedBefore", true)
-}
+checkFirstUse();
+detectImportFiles();
 var listView = $("fileList");
 listView.data = chapters;
