@@ -1,4 +1,4 @@
-q/*
+/*
 gihub地址: https://github.com/gadzan/Gditor
 
 - 文章为txt格式，默认保存到JSbox本地共享目录
