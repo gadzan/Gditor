@@ -1,4 +1,4 @@
-/*
+q/*
 gihub地址: https://github.com/gadzan/Gditor
 
 - 文章为txt格式，默认保存到JSbox本地共享目录
@@ -15,7 +15,7 @@ Todo
 
 */
 const
-  version = 0.98,
+  version = 0.99,
   localImageFolder = "shared://imageStocker/",
   configFilePath = "drive://gditor.json";
 returnBtnIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MzU4QzZGMjJGQjQyMTFFNzk2RjRCMzIxMjc1MjYxNjIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MzU4QzZGMjNGQjQyMTFFNzk2RjRCMzIxMjc1MjYxNjIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDozNThDNkYyMEZCNDIxMUU3OTZGNEIzMjEyNzUyNjE2MiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDozNThDNkYyMUZCNDIxMUU3OTZGNEIzMjEyNzUyNjE2MiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pogbd5AAAADqSURBVHjaYvz//z8DLQETA40BzS1gwSeZmJjIA6S2A/G3+fPnu1PVB1DD9wKxDRBzUDWIkAw3A+JzQOxLNQuwGO4IDJ5P5FrAiJxM0QwHAX5KDMdmwUsgJYYk/40IM0BqTgFxP9Axe2iRTLmA2AuINwIdWEFqEAkCXfWBQFJmA1JxQNwNTfagODuD1QdAiS9AyhnqZRDYCzRAAJ8FQD2/gHgOkFkLxCAHNuINIjRLjIixBArmQOPDhGAcYLFkIyHTgXp+QJk8REUykiVHgPgHTcoiqCW2I7u4HuYVDhngCN6iYjQOsAGAAAMAqK5dYjN94HUAAAAASUVORK5CYII="
@@ -46,6 +46,35 @@ if (config) {
   saveConfig()
 };
 var chapters = $file.list(localDataFolder);
+
+const listTemplate = [{
+    type: "image",
+    props: {
+      id: "listIcon",
+      bgcolor: $color("clear"),
+      radius: 5
+    },
+    layout: function(make, view) {
+      make.size.equalTo($size(24, 24))
+      make.centerY.equalTo(view.super)
+      make.left.inset(15)
+    }
+  },
+  {
+    type: "label",
+    props: {
+      id: "textTitle",
+      //font: $font("bold", 18),
+      autoFontSize: true
+    },
+    layout: function(make, view) {
+      make.left.equalTo(view.prev.right).offset(10)
+      make.height.equalTo(18)
+      make.centerY.equalTo(view.super)
+      make.right.inset(5)
+    }
+  }
+]
 
 const tabEveryLineSwitch = {
   type: "view",
@@ -250,62 +279,64 @@ const importFilesSetting = {
   layout: $layout.fill
 }
 
-const feedbacksArray = [{
-  title: "邮件",
-  text: "gadzan@qq.com",
-  url: "mailto:gadzan@qq.com"
-}, {
-  title: "Telegram",
-  text: "@gadzan",
-  url: "http://t.me/gadzan"
-}, {
-  title: "微博",
-  text: "@gadzan",
-  url: "weibo://userinfo?uid=gadzan"
-}]
-
-const feedbacks = feedbacksArray.map(item => {
-  return {
-    type: "view",
-    props: {
-
-    },
-    views: [{
-        type: "label",
-        props: {
-          text: item.title
-        },
-        layout: function(make, view) {
-          make.left.inset(15);
-          make.centerY.equalTo(view.super);
-        }
-      },
-      {
-        type: "label",
-        props: {
-          text: item.text,
-          textColor: $color("#AAAAAA")
-        },
-        layout: function(make, view) {
-          make.right.inset(15);
-          make.centerY.equalTo(view.super);
-        }
-      }
-    ],
-    layout: $layout.fill,
-    events: {
-      tapped: function() {
-        $app.openURL(item.url)
+const feedBackTemplate = [{
+  type: "label",
+  props: {
+    id: "feedbackTitle"
+  },
+  layout: function(make, view){
+    make.left.inset(15);
+    make.centerY.equalTo(view.super);
+  }
+},{
+  type: "label",
+  props: {
+    id: "feedbackDetails",
+    textColor: $color("#AAAAAA")
+  },
+  layout: function(make, view){
+    make.right.inset(15);
+    make.centerY.equalTo(view.super);
+  },
+  events: {
+      tapped: function(sender, indexPath, item) {
+        
       }
     }
-  }
-})
+}]
+
+const feedbacksArray = [{
+  feedbackTitle: {
+    text:"邮件"
+  },
+  feedbackDetails: {
+    text: "gadzan@qq.com"
+  },
+  url: "mailto:gadzan@qq.com"
+}, {
+  feedbackTitle: {
+    text:"Telegram"
+  },
+  feedbackDetails: {
+    text: "@gadzan"
+  },
+  url: "http://t.me/gadzan"
+}, {
+  feedbackTitle: {
+    text: "微博"
+  },
+  feedbackDetails: {
+    text:"@gadzan"
+  },
+  url: "weibo://userinfo?uid=gadzan"
+}]
 
 const settingListView = {
   type: "list",
   props: {
     id: "settingList",
     title: "编辑器",
+    template: feedBackTemplate,
     data: [{
         title: "编辑器设置",
         rows: [
@@ -324,7 +355,7 @@ const settingListView = {
       },
       {
         title: "反馈",
-        rows: feedbacks
+        rows: feedbacksArray
       }
     ],
     footer: {
@@ -342,9 +373,11 @@ const settingListView = {
     make.size.equalTo(view.super)
   },
   events: {
-    didSelect: function(sender, indexPath, title){
-      if(title=="导入文章"){
+    didSelect: function(sender, indexPath, title) {
+      if (title == "导入文章") {
         listInboxFiles()
+      }else if(title.feedbackTitle.text){
+        $app.openURL(title.url)
       }
     }
   }
@@ -499,9 +532,7 @@ const returnBtn = {
   events: {
     tapped: function(sender) {
       localDataFolder = findPrevFolder();
-      chapters = folderMode ? $file.list(localDataFolder).filter(item => {
-        return $file.isDirectory(localDataFolder + item) ? item : false;
-      }) : $file.list(localDataFolder);
+      getChapters();
       listView.data = chapters;
     }
   }
@@ -546,7 +577,7 @@ const addNewChapterBtn = {
           chapterFileName = chapterFileName.split("\n")[0].replace(/(^\s*)|(\s*$)/g, "");
           if (!$file.exists(localDataFolder + chapterFileName + ".txt")) {
             var space = " ";
-            for(var i=0;i<parseInt(LocalConfig.tabSpaceNum)-1;i++){
+            for (var i = 0; i < parseInt(LocalConfig.tabSpaceNum) - 1; i++) {
               space = space + " ";
             }
             var newFileSuccess = $file.write({
@@ -638,7 +669,6 @@ const splitTextCompleteBtn = {
     icon: $icon("064", $color("#777777"), $size(20, 20))
   },
   layout: function(make, view) {
-    //make.center.equalTo(view.super);
     make.top.left.inset(10)
     make.size.equalTo($size(24, 24))
   },
@@ -714,10 +744,15 @@ const fileListView = {
   type: "list",
   props: {
     id: "fileList",
+    template: listTemplate,
     reorder: true,
     borderWidth: 1,
     borderColor: $color("#AAAAAA"),
     radius: 5,
+    data: [{
+      title: "1",
+      rows: ["1"]
+    }],
     footer: {
       type: "label",
       props: {
@@ -784,14 +819,13 @@ const fileListView = {
     make.top.inset(44)
   },
   events: {
-    didSelect: function(sender, indexPath, data) {
+    didSelect: function(sender, indexPath, lestdata) {
+      var data = lestdata.textTitle.text
+      $console.info(data)
+
       if ($file.isDirectory(localDataFolder + data)) {
-        // Folder selected
-        $("mainView").title = data;
         localDataFolder = localDataFolder + data + "/";
-        chapters = folderMode ? $file.list(localDataFolder).filter(item => {
-          return $file.isDirectory(localDataFolder + item) ? item : false;
-        }) : $file.list(localDataFolder);
+        getChapters();
         prevFolder = findPrevFolder();
         refreshList(chapters, listView);
       } else {
@@ -803,6 +837,7 @@ const fileListView = {
           var oldLinesNum = 0
         }
       }
+
     }
   }
 }
@@ -819,6 +854,37 @@ const mainView = {
     makeNewFolderBtn,
     fileListView
   ]
+}
+
+function getChapters() {
+  var temp = $file.list(localDataFolder);
+
+  chapters = folderMode ? $file.list(localDataFolder).filter(item => {
+    return $file.isDirectory(localDataFolder + item) ? {
+      listIcon: {
+        icon: $icon("057", $color("#AAAAAA"), $size(20, 20))
+      },
+      textTitle: {
+        text: item
+      }
+    } : false;
+  }) : temp.map(item => {
+    return $file.isDirectory(localDataFolder + item) ? {
+      listIcon: {
+        icon: $icon("057", $color("#AAAAAA"), $size(20, 20))
+      },
+      textTitle: {
+        text: item
+      }
+    } : {
+      listIcon: {
+        icon: $icon("031", $color("#AAAAAA"), $size(20, 20))
+      },
+      textTitle: {
+        text: item
+      }
+    }
+  })
 }
 
 function refreshList(data, view) {
@@ -870,7 +936,7 @@ function moveFile() {
   } else {
     $ui.alert("目标文件(夹)已存在")
   }
-  chapters = $file.list(localDataFolder);
+  getChapters();
   folderMode = false;
   refreshList(chapters, listView);
   $("moveFileSelectionBtn").remove()
@@ -895,7 +961,6 @@ function renameFile(indexPath) {
           return false;
         }
         if (!$file.isDirectory(localDataFolder + newName)) {
-          //if ($file.mkdir(localDataFolder + newName)) {
           var renameSuccess = $file.move({
             src: localDataFolder + oldName,
             dst: localDataFolder + newName
@@ -906,7 +971,6 @@ function renameFile(indexPath) {
           } else {
             $ui.alert("重命名失败")
           }
-          //}
         } else {
           $ui.alert(newName + " 已存在");
         }
@@ -935,35 +999,47 @@ function renameFile(indexPath) {
   })
 }
 
-function listInboxFiles(){
-  let inboxFiles = $file.list("inbox://");
+function listInboxFiles() {
+  let inboxFilesTemp = $file.list("inbox://");
   let importZipFilePath = "shared://gditor/导入的文章"
+  let inboxFiles = inboxFilesTemp.map(item => {
+    let fileExt = item.split(".").pop()
+    return {
+      listIcon: {
+        icon: $icon(fileExt=="zip"?"155":"031", $color("#AAAAAA"), $size(20, 20))
+      },
+      textTitle: {
+        text: item
+      }
+    }
+  })
   $ui.push({
     views: [{
       type: "list",
       props: {
         id: "inboxList",
-        data: inboxFiles
+        data: inboxFiles,
+        template: listTemplate
       },
       layout: $layout.fill,
       events: {
-        didSelect: function(sender, indexPath){
-          let fileName = inboxFiles[indexPath.row]
+        didSelect: function(sender, indexPath) {
+          let fileName = inboxFiles[indexPath.row].textTitle.text
           let path = "inbox://" + fileName;
           let fileExt = fileName.split(".").pop()
-          function deleteFile(){
+          function deleteFile() {
             $file.delete(path)
             sender.delete(indexPath)
           }
           $ui.menu({
-            items: ["导入后删除","直接删除"],
-            handler: function(title, index){
-              switch(index){
+            items: ["导入后删除", "直接删除"],
+            handler: function(title, index) {
+              switch (index) {
                 case 0:
                   let fileData = $file.read(path);
-                  if(fileExt == "txt"){
+                  if (fileExt == "txt") {
                     //$console.info("txt文件");
-                    if($file.exists(importZipFilePath + fileName)){
+                    if ($file.exists(importZipFilePath + fileName)) {
                       $ui.alert({
                         title: "导入失败",
                         message: "文章已存在",
@@ -976,36 +1052,35 @@ function listInboxFiles(){
                       }),
                       path: importZipFilePath + fileName
                     });
-                    if(importFileSuccess){
+                    if (importFileSuccess) {
                       $ui.toast(`导入 ${fileName} 成功`)
                       deleteFile();
-                      chapters = $file.list(localDataFolder);
+                      getChapters();
                       refreshList(chapters, listView);
-                    }else{
+                    } else {
                       $ui.alert(`导入 ${fileName} 失败`)
                     }
-                  }else if(fileExt == "zip"){
+                  } else if (fileExt == "zip") {
                     $ui.alert({
                       title: "⚠️请注意⚠️",
                       message: "解压后会自动覆盖命名重复的文件，请确认：",
-                      actions: [
-                        {
+                      actions: [{
                           title: "确认",
                           handler: function() {
                             $ui.loading(true);
-                            $ui.toast(`正在解压 ${fileName}`)
+                            $ui.toast(`正在解压 ${fileName}`);
                             !$file.isDirectory(localDataFolder) ? $file.mkdir(localDataFolder) : false;
                             $archiver.unzip({
                               file: fileData,
                               dest: importZipFilePath,
                               handler: function(success) {
                                 $ui.loading(false);
-                                if(success){
+                                if (success) {
                                   $ui.toast(`解压 ${fileName} 成功`)
                                   deleteFile();
-                                  chapters = $file.list(localDataFolder);
+                                  getChapters();
                                   refreshList(chapters, listView);
-                                }else{
+                                } else {
                                   $ui.alert(`解压 ${fileName} 失败`)
                                 }
                               }
@@ -1020,13 +1095,13 @@ function listInboxFiles(){
                         }
                       ]
                     })
-                  }else{
+                  } else {
                     $ui.toast("暂不支持此格式文件导入")
                   }
-                break;
+                  break;
                 case 1:
                   deleteFile();
-                break;
+                  break;
               }
             }
           })
@@ -1298,7 +1373,6 @@ function textSplitorProcessor(splitText) {
                 didSelect: function(sender, indexPath, data) {
                   var token = data.tile.text
                   var label = $("textSplitShow")
-                  //var cell = sender.cell(indexPath);
                   label.text = label.text + token
                 }
               }
@@ -1359,7 +1433,7 @@ function tabSpaceProcess(sender) {
 
 function editChapter(indexPath) {
   var timer;
-  var fileName = chapters[indexPath.row] ? chapters[indexPath.row] : "";
+  var fileName = chapters[indexPath.row].textTitle.text ? chapters[indexPath.row].textTitle.text : "";
   var editorView = {
     name: "editor",
     page: {
@@ -1413,7 +1487,6 @@ function editChapter(indexPath) {
             }
           }
         },
-        //preView,
         {
           type: "button",
           props: {
@@ -1504,7 +1577,8 @@ function deleteFile(indexPath) {
 function processSave(indexPath, fileName, auto) {
   fileName = fileName.replace(/(\.txt)/g, "");
   saveFile(fileName, $("editor").text, auto);
-  chapters = $file.list(localDataFolder);
+  getChapters();
+  //chapters = $file.list(localDataFolder);
   listView.data = chapters;
 }
 
@@ -1593,8 +1667,9 @@ function checkUpdate() {
     }
   })
 }
-function detectImportFiles(){
-  if($context.dataItems){
+
+function detectImportFiles() {
+  if ($context.dataItems) {
     $ui.alert("暂不支持运行本扩展导入文件，导入文件请直接选择 拷贝到“JSBox”，而后进入设置->导入进行导入操作。")
     //var importFiles = $context.dataItems;
     //importFiles[0].info.mimeType=="text/plain"
@@ -1606,4 +1681,5 @@ renderMainPage();
 checkFirstUse();
 detectImportFiles();
 var listView = $("fileList");
+getChapters()
 listView.data = chapters;
