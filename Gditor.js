@@ -15,7 +15,7 @@ Todo
 
 */
 const
-  version = 0.99,
+  version = 0.995,
   localImageFolder = "shared://imageStocker/",
   configFilePath = "drive://gditor.json";
 returnBtnIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MzU4QzZGMjJGQjQyMTFFNzk2RjRCMzIxMjc1MjYxNjIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MzU4QzZGMjNGQjQyMTFFNzk2RjRCMzIxMjc1MjYxNjIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDozNThDNkYyMEZCNDIxMUU3OTZGNEIzMjEyNzUyNjE2MiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDozNThDNkYyMUZCNDIxMUU3OTZGNEIzMjEyNzUyNjE2MiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pogbd5AAAADqSURBVHjaYvz//z8DLQETA40BzS1gwSeZmJjIA6S2A/G3+fPnu1PVB1DD9wKxDRBzUDWIkAw3A+JzQOxLNQuwGO4IDJ5P5FrAiJxM0QwHAX5KDMdmwUsgJYYk/40IM0BqTgFxP9Axe2iRTLmA2AuINwIdWEFqEAkCXfWBQFJmA1JxQNwNTfagODuD1QdAiS9AyhnqZRDYCzRAAJ8FQD2/gHgOkFkLxCAHNuINIjRLjIixBArmQOPDhGAcYLFkIyHTgXp+QJk8REUykiVHgPgHTcoiqCW2I7u4HuYVDhngCN6iYjQOsAGAAAMAqK5dYjN94HUAAAAASUVORK5CYII="
@@ -284,30 +284,30 @@ const feedBackTemplate = [{
   props: {
     id: "feedbackTitle"
   },
-  layout: function(make, view){
+  layout: function(make, view) {
     make.left.inset(15);
     make.centerY.equalTo(view.super);
   }
-},{
+}, {
   type: "label",
   props: {
     id: "feedbackDetails",
     textColor: $color("#AAAAAA")
   },
-  layout: function(make, view){
+  layout: function(make, view) {
     make.right.inset(15);
     make.centerY.equalTo(view.super);
   },
   events: {
-      tapped: function(sender, indexPath, item) {
-        
-      }
+    tapped: function(sender, indexPath, item) {
+
     }
+  }
 }]
 
 const feedbacksArray = [{
   feedbackTitle: {
-    text:"邮件"
+    text: "邮件"
   },
   feedbackDetails: {
     text: "gadzan@qq.com"
@@ -315,7 +315,7 @@ const feedbacksArray = [{
   url: "mailto:gadzan@qq.com"
 }, {
   feedbackTitle: {
-    text:"Telegram"
+    text: "Telegram"
   },
   feedbackDetails: {
     text: "@gadzan"
@@ -326,7 +326,7 @@ const feedbacksArray = [{
     text: "微博"
   },
   feedbackDetails: {
-    text:"@gadzan"
+    text: "@gadzan"
   },
   url: "weibo://userinfo?uid=gadzan"
 }]
@@ -376,7 +376,7 @@ const settingListView = {
     didSelect: function(sender, indexPath, title) {
       if (title == "导入文章") {
         listInboxFiles()
-      }else if(title.feedbackTitle.text){
+      } else if (title.feedbackTitle.text) {
         $app.openURL(title.url)
       }
     }
@@ -556,20 +556,82 @@ const moveFileSelectionBtn = {
   }
 }
 
+const mask = {
+  type: "view",
+  props: {
+    id: "mask",
+    hidden: true,
+    bgcolor: $color("#000000"),
+    alpha: 0.4
+  },
+  layout: $layout.fill,
+  events: {
+    tapped: function() {
+      triggerCreateBtn()
+    }
+  }
+}
+
+const createBtn = {
+  type: "button",
+  props: {
+    bgcolor: $color("clear"),
+    icon: $icon("104", $color("#777777"), $size(40, 40))
+  },
+  layout: function(make, view) {
+    make.bottom.right.inset(20)
+    make.size.equalTo($size(40, 40))
+
+  },
+  events: {
+    tapped: function(sender) {
+      triggerCreateBtn()
+    }
+  }
+}
+
+function triggerCreateBtn(close) {
+  if ($("addNewChapterBtn").hidden) {
+    
+    $("mask").hidden = false;
+    $("makeNewFolderBtn").hidden = false;
+    $("addNewChapterBtn").hidden = false;
+    
+    $("mask").animator.makeOpacity(0.4).easeOutSine.animate(0.4)
+    $("makeNewFolderBtn").animator.moveY(-80).easeOutBack.animate(0.4)
+    $("addNewChapterBtn").animator.moveX(-80).easeOutBack.animate(0.4)
+    
+  } else {
+    
+    $delay(0.1, function() {
+      $("mask").hidden = true;
+      $("makeNewFolderBtn").hidden = true;
+      $("addNewChapterBtn").hidden = true;
+    })
+    
+    $("mask").animator.makeOpacity(0).easeOutSine.animate(0.4)
+    $("makeNewFolderBtn").animator.moveY(80).easeOutBack.animate(0.4)
+    $("addNewChapterBtn").animator.moveX(80).easeOutBack.animate(0.4)
+    
+  }
+}
+
 const addNewChapterBtn = {
   type: "button",
   props: {
     title: "新增章节",
+    id: "addNewChapterBtn",
+    hidden: true,
     bgcolor: $color("clear"),
-    icon: $icon("104", $color("#777777"), $size(20, 20))
+    icon: $icon("031", $color("#333333"), $size(40, 40))
   },
   layout: function(make, view) {
-    make.top.inset(10);
-    make.left.equalTo(view.prev.right).offset(10);
-    make.size.equalTo($size(24, 24))
+    make.bottom.right.inset(20)
+    make.size.equalTo($size(40, 40))
   },
   events: {
     tapped: function(sender) {
+      triggerCreateBtn();
       $input.text({
         type: $kbType.default,
         placeholder: "请输入章节文件名(无需扩展名)",
@@ -706,17 +768,19 @@ const copyToClipBoardBtn = {
 const makeNewFolderBtn = {
   type: "button",
   props: {
+    id: "makeNewFolderBtn",
     title: "新建文件夹",
+    hidden: true,
     bgcolor: $color("clear"),
-    icon: $icon("057", $color("#777777"), $size(20, 20))
+    icon: $icon("057", $color("#333333"), $size(40, 40))
   },
   layout: function(make, view) {
-    make.top.inset(10)
-    make.left.equalTo(view.prev.right).offset(10);
-    make.size.equalTo($size(24, 24))
+    make.right.bottom.inset(20)
+    make.size.equalTo($size(40, 40))
   },
   events: {
     tapped: function(sender) {
+      triggerCreateBtn();
       $input.text({
         type: $kbType.default,
         placeholder: "请输入新笔记本名",
@@ -850,9 +914,11 @@ const mainView = {
   views: [
     settingBtn,
     returnBtn,
+    fileListView,
+    mask,
     addNewChapterBtn,
     makeNewFolderBtn,
-    fileListView
+    createBtn,
   ]
 }
 
@@ -1006,7 +1072,7 @@ function listInboxFiles() {
     let fileExt = item.split(".").pop()
     return {
       listIcon: {
-        icon: $icon(fileExt=="zip"?"155":"031", $color("#AAAAAA"), $size(20, 20))
+        icon: $icon(fileExt == "zip" ? "155" : "031", $color("#AAAAAA"), $size(20, 20))
       },
       textTitle: {
         text: item
@@ -1027,6 +1093,7 @@ function listInboxFiles() {
           let fileName = inboxFiles[indexPath.row].textTitle.text
           let path = "inbox://" + fileName;
           let fileExt = fileName.split(".").pop()
+
           function deleteFile() {
             $file.delete(path)
             sender.delete(indexPath)
