@@ -648,7 +648,7 @@ const addNewChapterBtn = {
             })
             if (newFileSuccess) {
               $ui.toast(chapterFileName + ".txt 创建成功");
-              chapters = $file.list(localDataFolder);
+              getChapters();
               listView.data = chapters;
               var index = chapters.indexOf(chapterFileName + ".txt");
               editChapter($indexPath(index, index));
@@ -790,7 +790,7 @@ const makeNewFolderBtn = {
             var mkdirSuccess = $file.mkdir(localDataFolder + notebookName)
             if (mkdirSuccess) {
               $ui.toast("笔记本 " + notebookName + " 创建成功")
-              chapters = $file.list(localDataFolder);
+              getChapters();
               listView.data = chapters;
             } else {
               $ui.toast("笔记本 " + notebookName + " 创建失败")
