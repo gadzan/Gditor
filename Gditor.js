@@ -11,14 +11,19 @@ gihub地址: https://github.com/gadzan/Gditor
 - 支持导入.txt .zip文件
 
 Todo
+- 暗光模式
 - 加密功能
 
 */
 const
-  version = 0.996,
+  version = 0.997,
   localImageFolder = "shared://imageStocker/",
-  configFilePath = "drive://gditor.json";
-returnBtnIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MzU4QzZGMjJGQjQyMTFFNzk2RjRCMzIxMjc1MjYxNjIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MzU4QzZGMjNGQjQyMTFFNzk2RjRCMzIxMjc1MjYxNjIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDozNThDNkYyMEZCNDIxMUU3OTZGNEIzMjEyNzUyNjE2MiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDozNThDNkYyMUZCNDIxMUU3OTZGNEIzMjEyNzUyNjE2MiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pogbd5AAAADqSURBVHjaYvz//z8DLQETA40BzS1gwSeZmJjIA6S2A/G3+fPnu1PVB1DD9wKxDRBzUDWIkAw3A+JzQOxLNQuwGO4IDJ5P5FrAiJxM0QwHAX5KDMdmwUsgJYYk/40IM0BqTgFxP9Axe2iRTLmA2AuINwIdWEFqEAkCXfWBQFJmA1JxQNwNTfagODuD1QdAiS9AyhnqZRDYCzRAAJ8FQD2/gHgOkFkLxCAHNuINIjRLjIixBArmQOPDhGAcYLFkIyHTgXp+QJk8REUykiVHgPgHTcoiqCW2I7u4HuYVDhngCN6iYjQOsAGAAAMAqK5dYjN94HUAAAAASUVORK5CYII="
+  configFilePath = "drive://gditor.json",
+  DARKBG = $color("#111111"),
+  GRAY = $color("AAAAAA"),
+  DARKFT = $color("CCCCCC"),
+  WHITE = $color("FFFFFF"),
+  returnBtnIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MzU4QzZGMjJGQjQyMTFFNzk2RjRCMzIxMjc1MjYxNjIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MzU4QzZGMjNGQjQyMTFFNzk2RjRCMzIxMjc1MjYxNjIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDozNThDNkYyMEZCNDIxMUU3OTZGNEIzMjEyNzUyNjE2MiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDozNThDNkYyMUZCNDIxMUU3OTZGNEIzMjEyNzUyNjE2MiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pogbd5AAAADqSURBVHjaYvz//z8DLQETA40BzS1gwSeZmJjIA6S2A/G3+fPnu1PVB1DD9wKxDRBzUDWIkAw3A+JzQOxLNQuwGO4IDJ5P5FrAiJxM0QwHAX5KDMdmwUsgJYYk/40IM0BqTgFxP9Axe2iRTLmA2AuINwIdWEFqEAkCXfWBQFJmA1JxQNwNTfagODuD1QdAiS9AyhnqZRDYCzRAAJ8FQD2/gHgOkFkLxCAHNuINIjRLjIixBArmQOPDhGAcYLFkIyHTgXp+QJk8REUykiVHgPgHTcoiqCW2I7u4HuYVDhngCN6iYjQOsAGAAAMAqK5dYjN94HUAAAAASUVORK5CYII="
 var localDataFolder = "shared://gditor/";
 !$file.isDirectory(localDataFolder) ? $file.mkdir(localDataFolder) : false;
 !$file.isDirectory(localImageFolder) ? $file.mkdir(localImageFolder) : false;
@@ -30,7 +35,9 @@ var configTamplate = {
   tabSpace: true,
   tabSpaceNum: 2,
   interlaced: false,
-  autoSaver: true
+  autoSaver: true,
+  darkMode: false,
+  editorFontSize: 17,
 };
 if (config) {
   var LocalConfig = JSON.parse(config.string);
@@ -45,8 +52,8 @@ if (config) {
   var LocalConfig = configTamplate;
   saveConfig()
 };
-var chapters = $file.list(localDataFolder);
-
+var chapters = []; //$file.list(localDataFolder);
+!$cache.get("fileListOrder") ? $cache.set("fileListOrder", {}) : false;
 const listTemplate = [{
     type: "image",
     props: {
@@ -64,6 +71,8 @@ const listTemplate = [{
     type: "label",
     props: {
       id: "textTitle",
+      //bgcolor: DARKBG,
+      //textColor: DARKFT,
       //font: $font("bold", 18),
       autoFontSize: true
     },
@@ -154,6 +163,57 @@ const tabEveryLineNum = {
       props: {
         id: "tabSpaceNumLabel",
         text: LocalConfig.tabSpaceNum.toString(),
+        color: $color("#666666")
+      },
+      layout: function(make, view) {
+        make.centerY.equalTo(view.super)
+        make.right.equalTo(view.prev.left).offset(-10)
+      }
+    }
+  ],
+  layout: $layout.fill
+}
+
+const editorTextSize = {
+  type: "view",
+  props: {
+
+  },
+  views: [{
+      type: "label",
+      props: {
+        text: "编辑器字体大小"
+      },
+      layout: function(make, view) {
+        make.left.inset(15);
+        make.centerY.equalTo(view.super);
+      }
+    },
+    {
+      type: "stepper",
+      props: {
+        id: "editorFontSizeStepper",
+        min: 0,
+        value: LocalConfig.editorFontSize,
+        tintColor: $color("#666666")
+      },
+      layout: function(make, view) {
+        make.right.inset(15);
+        make.centerY.equalTo(view.super);
+      },
+      events: {
+        changed: function(sender) {
+          sender.next.text = sender.value;
+          LocalConfig.editorFontSize = parseInt(sender.value);
+          saveConfig();
+        }
+      }
+    },
+    {
+      type: "label",
+      props: {
+        id: "editorFontSizeLabel",
+        text: LocalConfig.editorFontSize.toString(),
         color: $color("#666666")
       },
       layout: function(make, view) {
@@ -343,7 +403,8 @@ const settingListView = {
           tabEveryLineSwitch,
           tabEveryLineNum,
           interlacedSwitch,
-          autoSaverSwitch
+          autoSaverSwitch,
+          editorTextSize
         ]
       },
       {
@@ -506,10 +567,13 @@ const settingBtn = {
         delay: 0,
         handler: function() {
           $("tabSpaceChecker").on = LocalConfig.tabSpace;
-          $("tabSpaceNumLabel").text = LocalConfig.tabSpaceNum.toString()
-          $("tabSpaceNumStepper").value = LocalConfig.tabSpaceNum
-          $("autoSaverChecker").on = LocalConfig.autoSaver
-          $("interlacedSwitch").on = LocalConfig.interlaced
+          $("tabSpaceNumLabel").text = LocalConfig.tabSpaceNum.toString();
+          $("tabSpaceNumStepper").value = LocalConfig.tabSpaceNum;
+          $("editorFontSizeLabel").text = LocalConfig.editorFontSize.toString();
+          $("editorFontSizeStepper").value = LocalConfig.editorFontSize;
+          $("autoSaverChecker").on = LocalConfig.autoSaver;
+          $("interlacedSwitch").on = LocalConfig.interlaced;
+
         }
       })
     }
@@ -810,6 +874,7 @@ const fileListView = {
     id: "fileList",
     template: listTemplate,
     reorder: true,
+    //bgcolor: DARKBG,
     borderWidth: 1,
     borderColor: $color("#AAAAAA"),
     radius: 5,
@@ -902,6 +967,22 @@ const fileListView = {
         }
       }
 
+    },
+    reorderMoved: function(fromIndexPath, toIndexPath){
+      //$console.log(fromIndexPath.row)
+      //$console.log(toIndexPath.row)
+    },
+    reorderFinished: function(data){
+      var formatedData = data.map(item=>{
+        return item.textTitle.text;
+      })
+      savedOrder= $cache.get("fileListOrder");
+      savedOrder[localDataFolder+""] = formatedData;
+      $cache.setAsync({
+  key: "fileListOrder",
+  value: savedOrder});
+      //$cache.set("fileListOrder", savedOrder)
+      //$console.log(savedOrder)
     }
   }
 }
@@ -924,6 +1005,26 @@ const mainView = {
 
 function getChapters() {
   var temp = $file.list(localDataFolder);
+  //$cache.clear();
+  var savedOrder = $cache.get("fileListOrder")?$cache.get("fileListOrder"):{};
+  //$console.info(savedOrder)
+  if (typeof(savedOrder[localDataFolder+""]) != "undefined") {
+    temp.map(item => {
+      savedOrder[localDataFolder+""].indexOf(item) == -1 ? savedOrder[localDataFolder+""].push(item) : false;
+    })
+    savedOrder[localDataFolder+""].map((item, key) => {
+      temp.indexOf(item) == -1 ? savedOrder[localDataFolder+""].splice(key, 1) : false;
+    })
+  } else {
+    savedOrder[localDataFolder+""] = temp
+  }
+  $cache.setAsync({
+  key: "fileListOrder",
+  value: savedOrder})
+  //$cache.set("fileListOrder", savedOrder)
+  //$console.info(temp)
+  //$console.info(savedOrder[localDataFolder+""])
+  temp = savedOrder[localDataFolder+""]
   //$console.info(temp)
   if (folderMode) {
     chapters = [];
@@ -957,8 +1058,7 @@ function getChapters() {
         }
       }
     })
-  }
-  //$console.info(chapters)
+  }  
 }
 
 function refreshList(data, view) {
@@ -1520,6 +1620,7 @@ function editChapter(indexPath) {
             borderWidth: 1,
             borderColor: $color("#AAAAAA"),
             radius: 5,
+            font: $font(LocalConfig.editorFontSize),
             text: getFileContent(fileName)
           },
           layout: function(make, view) {

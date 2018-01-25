@@ -1,4 +1,4 @@
 {
-  "version": 0.996,
-  "msg": "重新设计添加文章笔记本按钮，fixed some bugs"
+  "version": 0.997,
+  "msg": "支持拖拽排列文件列表"
 }
