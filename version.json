@@ -1,4 +1,4 @@
 {
-  "version": 1.0,
-  "msg": "支持Markdown快捷键输入"
+  "version": 1.1,
+  "msg": "修改了列表和编辑器的UI，修复了一些bug"
 }

@@ -13,7 +13,7 @@ gihub地址: https://github.com/gadzan/Gditor
 
 */
 const
-  version = 1.0,
+  version = 1.1,
   localImageFolder = "shared://imageStocker/",
   configFilePath = "drive://gditor.json",
   DARKBG = $color("#111111"),
@@ -26,8 +26,8 @@ const
   codeIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAc1gAAHNYBTCInoQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAK/SURBVGiB7ZnJaxRBFIe/TFTEixo0MW6IJ0GFQE4SBBXRk8Zt9KKiV0EJgv4B3kUMhKAHl7MKRiMIohchICSecvCkgjoEJCKMCaLieKhpqXld1V29zdL0B32oV6+qfm/61TYNBQUFBZ1EV0DdYeAssB5Y1hw5Vn4BX4D7wGSUhqNArU2fG65BnGgDsWHPUSm6ZAjknGvELeS8NJgC2dwEIUnZIg2mQEy2dsOnsRNEO5GbQJY4+EwA77IWEsI2YDhqo1kal7pyyqLiUKZR06x0yE1q5SYQlzmSlBKwT9imgMU0B2lGIAPAC61cBXrSHiRJag06+u0W5TfAn4R9+ogbSBmYBh4Aa0N8ZVq9Mvj0o47n06hDayqELb89QEWr/wwcsPRVAuZFf0PC5yDqruHVV/CnXibL7x3UL+ixAei1+A4IUVVUaun0oi5vHv31MRIT9EZO4b8bPA7o67LwfW7xmzD0e1KrT/WNrAFuCtsPYCSgjZzory1+I8CCsI3Wx3QiSiDjQJ+wXQE+Wvy7gb3CZproAB/qfen0AdddxbkG0gWsMtjnA9rsAFZq5UVgJsC/YrCFrYj/cQ2kBpwBvgr7LWCTpc0eUZ5C/RtiYjXqjetUgQuO+iKl1hxwGhWULuARsNTg77J/eIzRuBICXMSetk6E7SPj+FeYa8KnG/gufHZZxjtm6O+h8MlkH7kKvNfKv4GfwifK/FiBSiOPb8ClGLp8uFysBlH5/hbYbqh33T881qFStAYcMdSHvpG4p98Z4DjwEvNx3HX/8JhDnbH203hSdibJMf6pxR5l/9CpETMIyOY+shw1j3SC9o9UyCKQBeB2Bv0Gkps7e24CMaXWX1EeBrY2QUsQO0VZajQySeu/f4Q9T6RoU2rdc4m2xdx1dey4T29BH0MPoQ50G12jz5hPqGPMs1YLKSgoKEjOP5drRoMmBnR6AAAAAElFTkSuQmCC",
   boldIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAJHSURBVGiB7dhNiE9RGMfxz8iMSGkyVjJZotSkFFnIEgvysmFlIdnKhpQVGyU7IisbyWYWXkpmQYmSl4WaJMnG62YYNN7G4szUUO597jj/uVfdX53V+Z3nnu///p/7POfQqlWrInUFPP04iQUZnvcNoxjBRwxPjPv4nCF+ofZhvMPjC65jN2Z1CmT/DIBMHQ+xuuomO0b/DxrAbeyssqiJIDAHF7AiuqCpICSY84J7bDIIrMHGiHF2xoe+wM+C+V7pE171x9uGK9Pc02+KfrV6g/H6cQgfgnEf54AgP8iklkmFsSzu20iwOnNkGKcCvoUCKVB3sg8FfUW5h/pBRgKe9/4DkMUBTyjZ6waJtCGDuR7Wqa/WDvwoiflO8PiQsyAuVQ7TjZXYha3Kz0MHxPIopJlu4yfH0SqbzPlGcuoIjlVZUHey/02HcVCF/TUVZB5O4BJ6IguaCjKp7TgTMebMkUF8LfHMnxjL0ReMuweXcXX6W0vqRB3pwnrpGmjGWvlOFUTScfZGMP6qokB158gY9koVvkybiybrBiEdkR8EfIV3XU0AgacBT2Gn3BSQyF+rsHlsCsiSgGesaLIJIIuwLuB7UzRZN0g3zom1IU+KJusC6cEm6bJ6S3DNzaLJnC3KkPKk7ZL+Sn2YWyH2a1wrMuQEGcgY608d9x8ke5nu4HSZqekgz6VLiu9lxiaDPMIGvIqYmwgyKh111+JldFEk2cenu6OKGsZFnBV8C1MVAbmFu1LxyqUxfMIz6XB1T0nBa9WqVSvwCwxg/HNlkKnDAAAAAElFTkSuQmCC",
   hashIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAangAAGp4B8NQjJQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAHnSURBVGiB7dm7ahVRGMXxX068gBcStQmoKFpEPRgFC1sb8QkEX0BfwTJgl1fQB7CwVhQbW0sVsYoIwU48B8SAitFChHiyL84ZM5kZ9x92831Zc9baZM9lbwqFwn/BTA3tPM5j76baB7zERkY7wAUc2VT7glcY1/BUmSFG+BEYD6UnaAaPItoRzm2b6wDLESO/x7GE9nhGuzyNocE0IuzL9PfX0Ob6QaYN0jpKkLbRmyC7Er2LuIFDgd7lzHXviD8P5jPaa5G/GeE+XmT0W35sLH2b3IkxjoSM/mudwVyV5A0x55e3LcSCzG6fl9oEvfVmsfc+yKdGXVSjkrdZPLHzd6nJ8Vhk8lOv2wMcxe5A7zZuJbRX8TbSO4WnCe1drATq3/Be5Fsn9UDcwFqkl/v4WRMPEpqYyWvHtFF6v9g7RwnSNnoTJHXXGuCk8Gv8Qua6QxyI9E5ktAu4FKiP8E5+q+kPOvdAjLHUAtOxsRQyHEt3sErqhgl6681i732Q7426qEYlb53bfEi9xp/FdeG92CvSW0L38DHSO4ybCe1zPAvU1/EAbxLayqxIz9xiQruY0Ya+RbL0frF3jhKkbUwbZD3T/1xDm+v/U1p3GFr3ePr0RO0rXvu74+kh9kzUVzV8PF0oFDrGTzEIJyUbHiEOAAAAAElFTkSuQmCC",
-  quoteIcon="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEPSURBVGiB7ZcxTsNAFEQfiIYyLUrHAVIhpeIONEiUnJETBCkNFQ0STRoUyAGo3OAUpHBj8pn12h80T1rJxde8HVlae8EYY4wxnHSe24rZXap4TgcOnQwXyYaLZMNFsuEi2XCRbLhINlwkGy6SDRfJRt+9+hiRe7eaLXn+zRtRipwHZj6F3CKPUuQiMPMh5BZ5lCLLwMy7kFvkUYrcBWYehdxRPVfAF9+nyU9roQrG8MyBTSD8paRBTc8MuAd2gfAWuBELVPVEArtrjfYhrO75TfiW2JE5iSca3gDXYolRPJHwHbEzf1LPsfAn4FLe/oievuBX4JZh/nAH8ZwFJA3wdlgr4AF41vabwmOM+cvsAY9yzh+YGaVGAAAAAElFTkSuQmCC",
-  transIcon="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAXEgAAFxIBZ5/SUgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAIuSURBVGiB7dk9jAxhHMfxz97hSBARcQ2JEIWXSHQUKKhFwkk0p0IlCgmtzkunEC6RSEQhp1AoJIjoNEdUlyhE4yQoTkgOwVKMSXbPzfuYmXX7Tf7F7DzPzO+bnX2eZ56lT595x2aM1h2iKLsxjV+4UHOW3BzEV4FEWDewoM5QWTmGH7olwrqLxfVFS89ZtM0tEdZjLK8rYBIDuCxeoLMmsLqWpDEsxE3pJcJ6hQ015J2TJbgnu0RYb7EtvFirwuCzOY59sz4bSejzFG86jt/jDGZKzFUKSd9CpOhAFemqYN6K7MBVTOKD/D/UsMYLG/wh7bS/DNdwRL0DRCRpRFbhCbb82yjFSHq0Writ4RIki4xibxVBipIkcqqSFCUQJ7IW26sKUpQ4kY2VpSiBuFFrZYr+zwWvotM57/8uZ7+/iBNJM18cwuuSshSi6BKlTIn1Kdp8jjpR5gv9TqzJ2XcRTqdoN5Xn4iOS10qdjKdoX6Q+YSgqbC+tfu/jW9TJXhFp43xcg14RuYUXcQ16QeQZTiQ1arrIBA4ItlBjaarIF8GKYZfuXZNImrIx/FMQeBIPcEfGOaNMkcMlXiszTX20MvPfiISP1gpc0b3LPZyi/8NZx49wsYRchViHl/Kvha5jsOrQUQwLJqCsEpc0cL9rqWAITCPQ1vANiiHBWB4n8V2P/H08iDFzS8xgf33RstPCOd0SH7GnxkyFOClYRkxha81ZCnMUm+oO0adPxfwGpeDhoHdZz1oAAAAASUVORK5CYII="
+  quoteIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEPSURBVGiB7ZcxTsNAFEQfiIYyLUrHAVIhpeIONEiUnJETBCkNFQ0STRoUyAGo3OAUpHBj8pn12h80T1rJxde8HVlae8EYY4wxnHSe24rZXap4TgcOnQwXyYaLZMNFsuEi2XCRbLhINlwkGy6SDRfJRt+9+hiRe7eaLXn+zRtRipwHZj6F3CKPUuQiMPMh5BZ5lCLLwMy7kFvkUYrcBWYehdxRPVfAF9+nyU9roQrG8MyBTSD8paRBTc8MuAd2gfAWuBELVPVEArtrjfYhrO75TfiW2JE5iSca3gDXYolRPJHwHbEzf1LPsfAn4FLe/oievuBX4JZh/nAH8ZwFJA3wdlgr4AF41vabwmOM+cvsAY9yzh+YGaVGAAAAAElFTkSuQmCC",
+  transIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAXEgAAFxIBZ5/SUgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAIuSURBVGiB7dk9jAxhHMfxz97hSBARcQ2JEIWXSHQUKKhFwkk0p0IlCgmtzkunEC6RSEQhp1AoJIjoNEdUlyhE4yQoTkgOwVKMSXbPzfuYmXX7Tf7F7DzPzO+bnX2eZ56lT595x2aM1h2iKLsxjV+4UHOW3BzEV4FEWDewoM5QWTmGH7olwrqLxfVFS89ZtM0tEdZjLK8rYBIDuCxeoLMmsLqWpDEsxE3pJcJ6hQ015J2TJbgnu0RYb7EtvFirwuCzOY59sz4bSejzFG86jt/jDGZKzFUKSd9CpOhAFemqYN6K7MBVTOKD/D/UsMYLG/wh7bS/DNdwRL0DRCRpRFbhCbb82yjFSHq0Writ4RIki4xibxVBipIkcqqSFCUQJ7IW26sKUpQ4kY2VpSiBuFFrZYr+zwWvotM57/8uZ7+/iBNJM18cwuuSshSi6BKlTIn1Kdp8jjpR5gv9TqzJ2XcRTqdoN5Xn4iOS10qdjKdoX6Q+YSgqbC+tfu/jW9TJXhFp43xcg14RuYUXcQ16QeQZTiQ1arrIBA4ItlBjaarIF8GKYZfuXZNImrIx/FMQeBIPcEfGOaNMkcMlXiszTX20MvPfiISP1gpc0b3LPZyi/8NZx49wsYRchViHl/Kvha5jsOrQUQwLJqCsEpc0cL9rqWAITCPQ1vANiiHBWB4n8V2P/H08iDFzS8xgf33RstPCOd0SH7GnxkyFOClYRkxha81ZCnMUm+oO0adPxfwGpeDhoHdZz1oAAAAASUVORK5CYII="
 var localDataFolder = "shared://gditor/";
 !$file.isDirectory(localDataFolder) ? $file.mkdir(localDataFolder) : false;
 !$file.isDirectory(localImageFolder) ? $file.mkdir(localImageFolder) : false;
@@ -887,6 +887,29 @@ const makeNewFolderBtn = {
   }
 }
 
+const fileListBlurBg = {
+  type: "view",
+  views: [{
+    type: "view",
+    props: {
+      bgcolor: $color("#000000")
+    },
+    layout: function(make, view) {
+      make.left.right.bottom.inset(20)
+      make.top.inset(70)
+    }
+  }, {
+    type: "blur",
+    props: {
+      style: 1, // 0 ~ 5
+      //bgcolor: $color("#000000"),
+      alpha: 1
+    },
+    layout: $layout.fill
+  }],
+  layout: $layout.fill
+}
+
 const fileListView = {
   type: "list",
   props: {
@@ -895,7 +918,8 @@ const fileListView = {
     reorder: true,
     //bgcolor: DARKBG,
     borderWidth: 1,
-    borderColor: $color("#AAAAAA"),
+    borderColor: $color("#EEEEEE"),
+    separatorHidden: true,
     radius: 5,
     data: [{
       title: "1",
@@ -1013,6 +1037,7 @@ const mainView = {
     id: "mainView",
   },
   views: [
+    fileListBlurBg,
     settingBtn,
     returnBtn,
     fileListView,
@@ -1643,6 +1668,8 @@ function newLineProcess(sender) {
 }
 
 function MDahead(str) {
+  //$("editor").editable= false;
+  //$console.info($("editor").contentOffset)
   try {
     var totalLines = $("editor").text.match(/\n/gm).length;
   } catch (e) {
@@ -1650,11 +1677,16 @@ function MDahead(str) {
   }
   var pos = closestLine($("editor")) + 1;
   var space = " ";
-  if($("editor").text.substr(pos,1)==str){
+  if ($("editor").text.substr(pos, 1) == str) {
     space = ""
   }
   $("editor").text = $("editor").text.slice(0, pos) + str + space + $("editor").text.slice(pos)
-  $("editor").selectedRange = $range(pos + 1, 0)
+  $delay(0.1, function() {
+    //$("editor").editable= true;
+    //$("editor").focus()
+    $("editor").selectedRange = $range(pos + 1, 0)
+  })
+ 
 }
 
 function MDenclose(str) {
@@ -1663,290 +1695,324 @@ function MDenclose(str) {
     str +
     $("editor").text.slice(pos.location, pos.location + pos.length) +
     str +
-    $("editor").text.slice(pos.location +
-      pos.length)
-  $("editor").selectedRange = $range(pos.location + str.length, pos.length)
-}
+    $("editor").text.slice(pos.location + pos.length);
+  $delay(0.1, function() {
+    $("editor").selectedRange = $range(pos.location, 0)
+      $("editor").selectedRange = $range(pos.location + str.length, pos.length)
+    })
+  }
 
-const mdHashBtn = {
-  type: "button",
-  props: {
-    id: "mdHashBtn",
-    bgcolor: $color("clear"),
-    alpha: 0.6,
-    src: hashIcon
-  },
-  layout: function(make, view) {
-    make.left.inset(10)
-    make.top.equalTo(view.prev.bottom).offset(5);
-    make.size.equalTo($size(24, 24))
-  },
-  events: {
-    tapped: function(sender) {
-      MDahead("#")
-      $("mdHashBtn").alpha = 0.6
+  const mdHashBtn = {
+    type: "button",
+    props: {
+      id: "mdHashBtn",
+      bgcolor: $color("clear"),
+      alpha: 0.6,
+      src: hashIcon
+    },
+    layout: function(make, view) {
+      make.left.inset(10)
+      make.top.equalTo(view.prev.bottom).offset(5);
+      make.size.equalTo($size(24, 24))
+    },
+    events: {
+      tapped: function(sender) {
+        MDahead("#")
+        $("mdHashBtn").alpha = 0.6
+      }
     }
   }
-}
 
-const mdBoldBtn = {
-  type: "button",
-  props: {
-    id: "MDbold",
-    bgcolor: $color("clear"),
-    alpha: 0.6,
-    src: boldIcon
-  },
-  layout: function(make, view) {
-    make.top.equalTo(view.prev.top)
-    make.left.equalTo(view.prev.right).offset(5);
-    make.size.equalTo($size(24, 24))
-  },
-  events: {
-    tapped: function(sender) {
-      MDenclose("**")
-      //sender.alpha = 0.6
+  const mdBoldBtn = {
+    type: "button",
+    props: {
+      id: "MDbold",
+      bgcolor: $color("clear"),
+      alpha: 0.6,
+      src: boldIcon
+    },
+    layout: function(make, view) {
+      make.top.equalTo(view.prev.top)
+      make.left.equalTo(view.prev.right).offset(5);
+      make.size.equalTo($size(24, 24))
+    },
+    events: {
+      tapped: function(sender) {
+        MDenclose("**")
+        //sender.alpha = 0.6
+      }
     }
   }
-}
 
-const mdListBtn = {
-  type: "button",
-  props: {
-    id: "MDlist",
-    bgcolor: $color("clear"),
-    alpha: 0.6,
-    src: listIcon
-  },
-  layout: function(make, view) {
-    make.top.equalTo(view.prev.top)
-    make.left.equalTo(view.prev.right).offset(5);
-    make.size.equalTo($size(24, 24))
-  },
-  events: {
-    tapped: function(sender) {
-      MDahead("*")
+  const mdListBtn = {
+    type: "button",
+    props: {
+      id: "MDlist",
+      bgcolor: $color("clear"),
+      alpha: 0.6,
+      src: listIcon
+    },
+    layout: function(make, view) {
+      make.top.equalTo(view.prev.top)
+      make.left.equalTo(view.prev.right).offset(5);
+      make.size.equalTo($size(24, 24))
+    },
+    events: {
+      tapped: function(sender) {
+        MDahead("*")
+      }
     }
   }
-}
 
-const mdCodeBtn = {
-  type: "button",
-  props: {
-    id: "MDcode",
-    bgcolor: $color("clear"),
-    alpha: 0.6,
-    src: codeIcon
-  },
-  layout: function(make, view) {
-    make.top.equalTo(view.prev.top)
-    make.left.equalTo(view.prev.right).offset(5);
-    make.size.equalTo($size(24, 24))
-  },
-  events: {
-    tapped: function(sender) {
-      MDenclose("`")
+  const mdCodeBtn = {
+    type: "button",
+    props: {
+      id: "MDcode",
+      bgcolor: $color("clear"),
+      alpha: 0.6,
+      src: codeIcon
+    },
+    layout: function(make, view) {
+      make.top.equalTo(view.prev.top)
+      make.left.equalTo(view.prev.right).offset(5);
+      make.size.equalTo($size(24, 24))
+    },
+    events: {
+      tapped: function(sender) {
+        MDenclose("`")
+      }
     }
   }
-}
 
-const mdQuoteBtn = {
-  type: "button",
-  props: {
-    id: "MDquote",
-    bgcolor: $color("clear"),
-    alpha: 0.6,
-    src: quoteIcon
-  },
-  layout: function(make, view) {
-    make.top.equalTo(view.prev.top)
-    make.left.equalTo(view.prev.right).offset(5);
-    make.size.equalTo($size(24, 24))
-  },
-  events: {
-    tapped: function(sender) {
-      MDahead(">")
+  const mdQuoteBtn = {
+    type: "button",
+    props: {
+      id: "MDquote",
+      bgcolor: $color("clear"),
+      alpha: 0.6,
+      src: quoteIcon
+    },
+    layout: function(make, view) {
+      make.top.equalTo(view.prev.top)
+      make.left.equalTo(view.prev.right).offset(5);
+      make.size.equalTo($size(24, 24))
+    },
+    events: {
+      tapped: function(sender) {
+        MDahead(">")
+      }
     }
   }
-}
 
-function editChapter(indexPath) {
-  var timer;
-  var fileName = chapters[indexPath.row].textTitle.text ? chapters[indexPath.row].textTitle.text : "";
-  var editorView = {
-    name: "editor",
-    page: {
+  const editorBlurBg = {
+    type: "view",
+    views: [{
+      type: "view",
       props: {
-        title: fileName,
+        id: "editorShadowBlock",
+        bgcolor: $color("#000000")
       },
-      views: [{
-          type: "text",
-          props: {
-            id: "editor",
-            borderWidth: 1,
-            borderColor: $color("#AAAAAA"),
-            radius: 5,
-            font: $font(LocalConfig.editorFontSize),
-            text: getFileContent(fileName)
-          },
-          layout: function(make, view) {
-            make.left.right.inset(5);
-            make.bottom.inset(30);
-            make.top.inset(42);
-          },
-          events: {
-            ready: function(sender) {
-              sender.focus()
-            },
-            didBeginEditing: function(sender) {
-              sender.updateLayout(function(make) {
-                make.bottom.inset(330)
-              })
-              timer = $timer.schedule({
-                interval: 20,
-                handler: function() {
-                  LocalConfig.autoSaver ? processSave(indexPath, fileName, true) : false
-                }
-              })
-
-            },
-            didEndEditing: function(sender) {
-              sender.updateLayout(function(make) {
-                make.bottom.inset(5)
-              })
-              timer.invalidate()
-              LocalConfig.autoSaver ? processSave(indexPath, fileName, true) : false;
-            },
-            didChange: function(sender) {
-              if (LocalConfig.tabSpace) {
-                newLineProcess(sender)
-              }
-            },
-            longPressed: function() {
-              textSplitorProcessor($("editor").text.substr($("editor").selectedRange.location, $("editor").selectedRange.length))
-            }
-          }
-        },
-        mdHashBtn,
-        mdBoldBtn,
-        mdListBtn,
-        mdCodeBtn,
-        mdQuoteBtn,
-        {
-          type: "button",
-          props: {
-            title: "保存",
-            bgcolor: $color("clear"),
-            //icon: $icon("003", $color("#777777"), $size(20, 20)),
-            alpha: 0.6,
-            src: saveIcon
-          },
-          layout: function(make, view) {
-            make.top.inset(10);
-            make.left.inset(15);
-            make.size.equalTo($size(24, 24));
-          },
-          events: {
-            tapped: function(sender) {
-              processSave(indexPath, fileName, false);
-            }
-          }
-        },
-        convertionBtn,
-        splitTextBtn,
-        imageBtn
-      ]
-    }
+      layout: function(make, view) {
+        make.left.right.bottom.inset(20)
+        make.top.inset(70)
+      }
+    }, {
+      type: "blur",
+      props: {
+        style: 1, // 0 ~ 5
+        //bgcolor: $color("#000000"),
+        alpha: 1
+      },
+      layout: $layout.fill
+    }],
+    layout: $layout.fill
   }
-  $ui.push(editorView.page);
-  oldLinesNum = $("editor").text.match(/\n/gm).length;
-}
 
-function loopAllFiles(filePath) {
-  var files = [];
-  var list = $file.list(filePath);
-  list.map((item, idx) => {
-    if ($file.isDirectory(filePath + "/" + item)) {
-      loopAllFiles(filePath + "/" + item)
-    } else {
-      files.push(filePath + "/" + item);
+  function editChapter(indexPath) {
+    var timer;
+    var fileName = chapters[indexPath.row].textTitle.text ? chapters[indexPath.row].textTitle.text : "";
+    var editorView = {
+      name: "editor",
+      page: {
+        props: {
+          title: fileName,
+        },
+        views: [
+          editorBlurBg,
+          {
+            type: "text",
+            props: {
+              id: "editor",
+              borderWidth: 1,
+              borderColor: $color("#EEEEEE"),
+              radius: 5,
+              font: $font(LocalConfig.editorFontSize),
+              text: getFileContent(fileName)
+            },
+            layout: function(make, view) {
+              make.left.right.inset(5);
+              make.bottom.inset(30);
+              make.top.inset(42);
+            },
+            events: {
+              ready: function(sender) {
+                sender.focus()
+              },
+              didBeginEditing: function(sender) {
+                $("editorShadowBlock").updateLayout(function(make) {
+                  make.bottom.inset(330)
+                })
+                sender.updateLayout(function(make) {
+                  make.bottom.inset(330)
+                })
+                timer = $timer.schedule({
+                  interval: 20,
+                  handler: function() {
+                    LocalConfig.autoSaver ? processSave(indexPath, fileName, true) : false
+                  }
+                })
+
+              },
+              didEndEditing: function(sender) {
+                $("editorShadowBlock").updateLayout(function(make) {
+                  make.bottom.inset(5)
+                })
+                sender.updateLayout(function(make) {
+                  make.bottom.inset(5)
+                })
+                timer.invalidate()
+                LocalConfig.autoSaver ? processSave(indexPath, fileName, true) : false;
+              },
+              didChange: function(sender) {
+                if (LocalConfig.tabSpace) {
+                  newLineProcess(sender)
+                }
+              },
+              longPressed: function() {
+                textSplitorProcessor($("editor").text.substr($("editor").selectedRange.location, $("editor").selectedRange.length))
+              }
+            }
+          },
+          mdHashBtn,
+          mdBoldBtn,
+          mdListBtn,
+          mdCodeBtn,
+          mdQuoteBtn,
+          {
+            type: "button",
+            props: {
+              title: "保存",
+              bgcolor: $color("clear"),
+              //icon: $icon("003", $color("#777777"), $size(20, 20)),
+              alpha: 0.6,
+              src: saveIcon
+            },
+            layout: function(make, view) {
+              make.top.inset(10);
+              make.left.inset(15);
+              make.size.equalTo($size(24, 24));
+            },
+            events: {
+              tapped: function(sender) {
+                processSave(indexPath, fileName, false);
+              }
+            }
+          },
+          convertionBtn,
+          splitTextBtn,
+          imageBtn
+        ]
+      }
     }
-  })
-  return files;
-}
+    $ui.push(editorView.page);
+    oldLinesNum = $("editor").text.match(/\n/gm).length;
+  }
 
-function zipFiles(filePath) {
-  $ui.toast("正在打包文件夹");
-  var dest = "output.zip";
-  var filePaths = loopAllFiles(filePath);
-  var files = [];
-  if (filePaths.length != 0) {
-    $ui.loading(true);
-    filePaths.map(item => {
-      files.push($file.read(item))
-    });
-    $archiver.zip({
-      files: files,
-      dest: dest,
-      handler: function(success) {
-        $ui.loading(false);
-        if (success) {
-          $share.sheet([dest, $file.read(dest)])
-        } else {
-          $ui.toast("操作失败")
-        }
+  function loopAllFiles(filePath) {
+    var files = [];
+    var list = $file.list(filePath);
+    list.map((item, idx) => {
+      if ($file.isDirectory(filePath + "/" + item)) {
+        loopAllFiles(filePath + "/" + item)
+      } else {
+        files.push(filePath + "/" + item);
       }
     })
-  } else {
-    $ui.toast("没有可打包导出的文件")
+    return files;
   }
-}
 
-function addChapter(chapterName) {
-  chapters.unshift(chapterName);
-  saveFile(chapterName, "")
-}
-
-function deleteFile(indexPath) {
-  var fileName = chapters[indexPath.row].textTitle.text;
-  var temp = chapters.map(item => {
-    return item.textTitle.text
-  })
-  var index = temp.indexOf(fileName);
-  if (index >= 0) {
-    chapters.splice(index, 1);
-    var deleteFile = $file.delete(localDataFolder + fileName)
-    if (deleteFile) {
-      getChapters();
-      refreshList(chapters, listView);
-      $ui.toast("已删除");
+  function zipFiles(filePath) {
+    $ui.toast("正在打包文件夹");
+    var dest = "output.zip";
+    var filePaths = loopAllFiles(filePath);
+    var files = [];
+    if (filePaths.length != 0) {
+      $ui.loading(true);
+      filePaths.map(item => {
+        files.push($file.read(item))
+      });
+      $archiver.zip({
+        files: files,
+        dest: dest,
+        handler: function(success) {
+          $ui.loading(false);
+          if (success) {
+            $share.sheet([dest, $file.read(dest)])
+          } else {
+            $ui.toast("操作失败")
+          }
+        }
+      })
+    } else {
+      $ui.toast("没有可打包导出的文件")
     }
   }
-}
 
-function processSave(indexPath, fileName, auto) {
-  fileName = fileName.replace(/(\.txt)/g, "");
-  saveFile(fileName, $("editor").text, auto);
-  getChapters();
-  //chapters = $file.list(localDataFolder);
-  listView.data = chapters;
-}
-
-function saveFile(fileName, content, auto) {
-  var saveFileSuccess = $file.write({
-    data: $data({
-      string: content
-    }),
-    path: localDataFolder + fileName + ".txt"
-  })
-  if (saveFileSuccess) {
-    !auto ? $ui.toast("保存成功") : false;
+  function addChapter(chapterName) {
+    chapters.unshift(chapterName);
+    saveFile(chapterName, "")
   }
-}
 
-function markdown2html(text) {
-  $ui.loading("处理中…");
-  /*
+  function deleteFile(indexPath) {
+    var fileName = chapters[indexPath.row].textTitle.text;
+    var temp = chapters.map(item => {
+      return item.textTitle.text
+    })
+    var index = temp.indexOf(fileName);
+    if (index >= 0) {
+      chapters.splice(index, 1);
+      var deleteFile = $file.delete(localDataFolder + fileName)
+      if (deleteFile) {
+        getChapters();
+        refreshList(chapters, listView);
+        $ui.toast("已删除");
+      }
+    }
+  }
+
+  function processSave(indexPath, fileName, auto) {
+    fileName = fileName.replace(/(\.txt)/g, "");
+    saveFile(fileName, $("editor").text, auto);
+    getChapters();
+    //chapters = $file.list(localDataFolder);
+    listView.data = chapters;
+  }
+
+  function saveFile(fileName, content, auto) {
+    var saveFileSuccess = $file.write({
+      data: $data({
+        string: content
+      }),
+      path: localDataFolder + fileName + ".txt"
+    })
+    if (saveFileSuccess) {
+      !auto ? $ui.toast("保存成功") : false;
+    }
+  }
+
+  function markdown2html(text) {
+    $ui.loading("处理中…");
+    /*
   var $pageSize = {
   letter: 0, governmentLetter: 1, legal: 2, juniorLegal: 3, ledger: 4, tabloid: 5,
   A0: 6, A1: 7, A2: 8, A3: 9, A4: 10, A5: 11, A6: 12, A7: 13, A8: 14, A9: 15, A10: 16,
@@ -1955,81 +2021,81 @@ function markdown2html(text) {
   custom: 52
 }
   */
-  $http.post({
-    url: "https://api.github.com/markdown",
-    body: { text: text, mode: "gfm", context: "github/gollum" },
-    handler: function(resp) {
-      $ui.loading(false)
-      var html = resp.data
-      $ui.menu({
-        items: ["预览结果", "拷贝到剪贴板", "创建 PDF 文件"],
-        handler: function(title, idx) {
-          if (idx == 0) {
-            //$("preView").html = html;
-            $quicklook.open({ html: html })
-          } else if (idx == 1) {
-            $clipboard.html = html
-          } else {
-            $ui.menu({
-              items: ['letter', 'governmentLetter', 'legal', 'juniorLegal', 'ledger', 'tabloid', 'A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'B0', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'custom'],
-              handler: function(sizeTitle, idx) {
-                $pdf.make({
-                  html: html,
-                  pageSize: $pageSize[sizeTitle],
-                  handler: function(resp) {
-                    if (resp.data) {
-                      $share.sheet(["Gidotor-output.pdf", resp.data])
+    $http.post({
+      url: "https://api.github.com/markdown",
+      body: { text: text, mode: "gfm", context: "github/gollum" },
+      handler: function(resp) {
+        $ui.loading(false)
+        var html = resp.data
+        $ui.menu({
+          items: ["预览结果", "拷贝到剪贴板", "创建 PDF 文件"],
+          handler: function(title, idx) {
+            if (idx == 0) {
+              //$("preView").html = html;
+              $quicklook.open({ html: html })
+            } else if (idx == 1) {
+              $clipboard.html = html
+            } else {
+              $ui.menu({
+                items: ['letter', 'governmentLetter', 'legal', 'juniorLegal', 'ledger', 'tabloid', 'A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'B0', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'custom'],
+                handler: function(sizeTitle, idx) {
+                  $pdf.make({
+                    html: html,
+                    pageSize: $pageSize[sizeTitle],
+                    handler: function(resp) {
+                      if (resp.data) {
+                        $share.sheet(["Gidotor-output.pdf", resp.data])
+                      }
                     }
-                  }
-                })
-              },
-              finished: function(cancelled) {}
-            })
-          }
-        }
-      })
-    }
-  })
-}
-
-function checkUpdate() {
-  $http.get({
-    url: "https://raw.githubusercontent.com/gadzan/Gditor/master/version.json",
-    handler: function(resp) {
-      var newVersion = resp.data.version;
-      var msg = resp.data.msg;
-      if (newVersion > version) {
-        $ui.alert({
-          title: "最新版本为 " + newVersion,
-          message: "更新后自动会关闭本扩展,重新打开本扩展即可.\n" + msg,
-          actions: [{
-            title: "更新",
-            handler: function() {
-              var url = "jsbox://install?url=https://raw.githubusercontent.com/gadzan/Gditor/master/Gditor.js&name=Gditor&icon=icon_030.png";
-              $app.openURL(encodeURI(url));
-              $app.close()
+                  })
+                },
+                finished: function(cancelled) {}
+              })
             }
-          }, {
-            title: "取消"
-          }]
+          }
         })
       }
-    }
-  })
-}
-
-function detectImportFiles() {
-  if ($context.dataItems) {
-    $ui.alert("暂不支持运行本扩展导入文件，导入文件请直接选择 拷贝到“JSBox”，而后进入设置->导入进行导入操作。")
-    //var importFiles = $context.dataItems;
-    //importFiles[0].info.mimeType=="text/plain"
+    })
   }
-}
 
-checkUpdate();
-renderMainPage();
-checkFirstUse();
-detectImportFiles();
-var listView = $("fileList");
-getChapters()
-listView.data = chapters;
+  function checkUpdate() {
+    $http.get({
+      url: "https://raw.githubusercontent.com/gadzan/Gditor/master/version.json",
+      handler: function(resp) {
+        var newVersion = resp.data.version;
+        var msg = resp.data.msg;
+        if (newVersion > version) {
+          $ui.alert({
+            title: "最新版本为 " + newVersion,
+            message: "更新后自动会关闭本扩展,重新打开本扩展即可.\n" + msg,
+            actions: [{
+              title: "更新",
+              handler: function() {
+                var url = "jsbox://install?url=https://raw.githubusercontent.com/gadzan/Gditor/master/Gditor.js&name=Gditor&icon=icon_030.png";
+                $app.openURL(encodeURI(url));
+                $app.close()
+              }
+            }, {
+              title: "取消"
+            }]
+          })
+        }
+      }
+    })
+  }
+
+  function detectImportFiles() {
+    if ($context.dataItems) {
+      $ui.alert("暂不支持运行本扩展导入文件，导入文件请直接选择 拷贝到“JSBox”，而后进入设置->导入进行导入操作。")
+      //var importFiles = $context.dataItems;
+      //importFiles[0].info.mimeType=="text/plain"
+    }
+  }
+
+  checkUpdate();
+  renderMainPage();
+  checkFirstUse();
+  detectImportFiles();
+  var listView = $("fileList");
+  getChapters()
+  listView.data = chapters;
