@@ -13,13 +13,13 @@ gihub地址: https://github.com/gadzan/Gditor
 
 */
 const
-  version = 1.1,
+  version = 1.11,
   localImageFolder = "shared://imageStocker/",
   configFilePath = "drive://gditor.json",
   DARKBG = $color("#111111"),
   GRAY = $color("AAAAAA"),
   DARKFT = $color("CCCCCC"),
-  WHITE = $color("FFFFFF"),
+  WHITE = $color("FFFFFF")
   returnBtnIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MzU4QzZGMjJGQjQyMTFFNzk2RjRCMzIxMjc1MjYxNjIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MzU4QzZGMjNGQjQyMTFFNzk2RjRCMzIxMjc1MjYxNjIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDozNThDNkYyMEZCNDIxMUU3OTZGNEIzMjEyNzUyNjE2MiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDozNThDNkYyMUZCNDIxMUU3OTZGNEIzMjEyNzUyNjE2MiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pogbd5AAAADqSURBVHjaYvz//z8DLQETA40BzS1gwSeZmJjIA6S2A/G3+fPnu1PVB1DD9wKxDRBzUDWIkAw3A+JzQOxLNQuwGO4IDJ5P5FrAiJxM0QwHAX5KDMdmwUsgJYYk/40IM0BqTgFxP9Axe2iRTLmA2AuINwIdWEFqEAkCXfWBQFJmA1JxQNwNTfagODuD1QdAiS9AyhnqZRDYCzRAAJ8FQD2/gHgOkFkLxCAHNuINIjRLjIixBArmQOPDhGAcYLFkIyHTgXp+QJk8REUykiVHgPgHTcoiqCW2I7u4HuYVDhngCN6iYjQOsAGAAAMAqK5dYjN94HUAAAAASUVORK5CYII=",
   saveIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAEJQTFRF////+Pj4dXV1GRkZAAAANDQ06enpLCwsxcXF6urqLS0tKCgo5ubmPDw8xMTEwsLCGhoad3d3eXl5+fn5dnZ2eHh4y6Nz0AAAAAFiS0dEAIgFHUgAAAAJcEhZcwAAAEgAAABIAEbJaz4AAABuSURBVCjPvdJLDoAgDATQKgP4Q1H0/lc1IilFXbFwVtAX2jSBqCJNq5CjDUOLIpZFoSMgXYzNchUZqB8wTl8g5IYUF7tpBieATHov2oip1eAgxwuQqz9AtvkRFOYSFvh4XPHKFiHsviz7I9R8kRMFJgSRobz/hgAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxOC0wMS0yNVQxMTowOTozMS0wNTowMM9OuAcAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTgtMDEtMjVUMTE6MDk6MzEtMDU6MDC+EwC7AAAAe3pUWHRzdmc6YmFzZS11cmkAAAjXXcxBDoIwEEDRE5UpIiJuTbxHU2egWDrQKdPrG3fE7U/epxDxAQDqMtRaQWeWIkAZ0XhOirlgbjyvwETB/8dji+zeAtcjxeUTOk3lpoPd5LLuhLynFl6/1fOsjDhFM957a8eubUSnLyM6MIqfu3ucAAAAAElFTkSuQmCC",
   listIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAADCSURBVGiB7dZNCsIwGIThV4+hiKAXEa/sz04E8Vhi3VhoJdImxnRK54FAoSF80yw6YGaxrkAlvi6fQ88CQar0b1BUa/b5UFPk5iBqHETNpIMcgQ2wBc55x8mr62e0auxdB97vMs2x75ijJeVGnl+ea4+EM0N+PqfrRg7AAlgCpx77/7VaXFHUOIgaB1Ez6SCuKJFcUWquKIW5okhzEDUOosYV5c0VpQdXlGaQMXBFkeYgahxETSjIvfgU8W5DD2A2Ni9G6PFswBbihwAAAABJRU5ErkJggg==",
@@ -34,7 +34,9 @@ var localDataFolder = "shared://gditor/";
 var config = $file.read(configFilePath),
   curPath = "",
   oldLinesNum = 0,
-  folderMode = false;
+  folderMode = false,
+  screenWidth = $device.info.screen.width,
+  screenHeight = $device.info.screen.height;
 var configTamplate = {
   tabSpace: true,
   tabSpaceNum: 2,
@@ -1859,11 +1861,37 @@ function MDenclose(str) {
                 sender.focus()
               },
               didBeginEditing: function(sender) {
+                let offsetW = 0,
+                    offsetH = 0;
+                switch($device.info.model){
+                  case "iPhone10,3":
+                    offsetW = 0;
+                    offsetH = 30;
+                  break;
+                  case "iPhone7,1":
+                    offsetW = 0;
+                    offsetH = 0;
+                  break;
+                  default:
+                    offsetW = 0;
+                    offsetH = 0;
+                }
+                if($device.info.model.indexOf("iPad")!=-1){
+                  offsetW=180;
+                  offsetH=20;
+                };
+                //console.log($device.info)
+  if($device.info.screen.orientation>2){
+                  var keyBoardHeight = 250 + offsetW;
+                }else{
+                  var keyBoardHeight = 335 + offsetH;
+                }
+                
                 $("editorShadowBlock").updateLayout(function(make) {
-                  make.bottom.inset(330)
+                  make.bottom.inset(keyBoardHeight)
                 })
                 sender.updateLayout(function(make) {
-                  make.bottom.inset(330)
+                  make.bottom.inset(keyBoardHeight)
                 })
                 timer = $timer.schedule({
                   interval: 20,
