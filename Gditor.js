@@ -13,7 +13,7 @@ gihub地址: https://github.com/gadzan/Gditor
 
 */
 const
-  version = 1.11,
+  version = 1.12,
   localImageFolder = "shared://imageStocker/",
   configFilePath = "drive://gditor.json",
   DARKBG = $color("#111111"),
@@ -1877,8 +1877,8 @@ function MDenclose(str) {
                     offsetH = 0;
                 }
                 if($device.info.model.indexOf("iPad")!=-1){
-                  offsetW=180;
-                  offsetH=20;
+                  offsetW=205;
+                  offsetH=45;
                 };
                 //console.log($device.info)
   if($device.info.screen.orientation>2){
