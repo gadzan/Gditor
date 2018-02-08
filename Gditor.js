@@ -1687,7 +1687,7 @@ function MDahead(str) {
   $delay(0.1, function() {
     //$("editor").editable= true;
     //$("editor").focus()
-    $("editor").selectedRange = $range(pos + 1, 0)
+    $("editor").selectedRange = $range(pos + 1 + space.length, 0)
   })
 
 }
