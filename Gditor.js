@@ -12,8 +12,9 @@ gihub地址: https://github.com/gadzan/Gditor
 - 支持导入.txt .zip文件
 
 */
+var cypto = require("crypto-js");
 const
-  version = 1.2,
+  version = 1.22,
   localImageFolder = "shared://imageStocker/",
   configFilePath = "drive://gditor.json",
   DARKBG = $color("#111111"),
@@ -890,6 +891,67 @@ const makeNewFolderBtn = {
   }
 }
 
+function reorderByName(data) {
+  var sortedData = data.sort(
+    function compareFunction(param1, param2) {
+      return param1.localeCompare(param2, "zh");
+    }
+  )
+  savedOrder = $cache.get("fileListOrder");
+  savedOrder[localDataFolder + ""] = sortedData;
+  $ui.loading(true)
+  $cache.setAsync({
+    key: "fileListOrder",
+    value: savedOrder,
+    handler: function(object) {
+      getChapters()
+      refreshList(chapters, $("fileList"))
+      $ui.loading(false)
+    }
+  });
+}
+
+const reorderByNameBtn = {
+  type: "button",
+  props: {
+    id: "reorderByNameBtn",
+    title: "重新排列",
+    bgcolor: $color("clear"),
+    icon: $icon("163", $color("#777777"), $size(20, 20))
+  },
+  layout: function(make, view) {
+    make.top.inset(10)
+    make.left.equalTo(view.prev.right).offset(10);
+    make.size.equalTo($size(24, 24))
+  },
+  events: {
+    tapped: function(sender) {
+      $ui.action({
+        title: "👨🏻‍🔧提示👩‍🔧",
+        message: "请注意，此功能会对文件名和笔记本名的中文拼音一起进行排序，顺序:数字>中文>英文",
+        actions: [{
+            title: "好的",
+            handler: function() {
+              var sortChapters = []
+              sortChapters = chapters.map(item => {
+                return item.textTitle.text
+              })
+              reorderByName(sortChapters)
+              $ui.toast("排序完毕")
+            }
+          },
+          {
+            title: "我再想想",
+            handler: function() {
+              $ui.toast("已取消")
+            }
+          }
+        ]
+      })
+    }
+  }
+}
+
 const fileListBlurBg = {
   type: "view",
   views: [{
@@ -1024,6 +1086,8 @@ const fileListView = {
       })
       savedOrder = $cache.get("fileListOrder");
       savedOrder[localDataFolder + ""] = formatedData;
+      //console.log(localDataFolder)
+      //console.log(savedOrder)
       $cache.setAsync({
         key: "fileListOrder",
         value: savedOrder
@@ -1043,6 +1107,7 @@ const mainView = {
     fileListBlurBg,
     settingBtn,
     returnBtn,
+    reorderByNameBtn,
     fileListView,
     mask,
     addNewChapterBtn,
@@ -1710,7 +1775,7 @@ function MDlink() {
   var selectedText = $("editor").text.slice(pos.location, pos.location + pos.length);
   var clipLinks = $clipboard.links;
   if (clipLinks.length != 0) {
-    $ui.toast("点击Cancel可自定义输入链接")  
+    $ui.toast("点击Cancel可自定义输入链接")
     $ui.menu({
       items: clipLinks,
       handler: function(link, idx) {
@@ -2046,7 +2111,10 @@ function zipFiles(filePath) {
   if (filePaths.length != 0) {
     $ui.loading(true);
     filePaths.map(item => {
-      files.push($file.read(item))
+      var tem = $file.read(item)
+      var pathArr = item.split("/")
+      tem.fileName = pathArr[pathArr.length - 1]
+      files.push(tem)
     });
     $archiver.zip({
       files: files,
