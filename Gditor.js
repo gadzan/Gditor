@@ -14,7 +14,7 @@ gihub地址: https://github.com/gadzan/Gditor
 */
 var cypto = require("crypto-js");
 const
-  version = 1.22,
+  version = 1.23,
   localImageFolder = "shared://imageStocker/",
   configFilePath = "drive://gditor.json",
   DARKBG = $color("#111111"),
@@ -1040,7 +1040,25 @@ const fileListView = {
         title: "导出",
         handler: function(sender, indexPath) {
           if ($file.isDirectory(localDataFolder + chapters[indexPath.row].textTitle.text)) {
-            zipFiles(localDataFolder + chapters[indexPath.row].textTitle.text)
+            $ui.action({
+              title: "请选择导出方式",
+              message: "",
+              actions: [{
+                  title: "导出为zip压缩文件",
+                  handler: function() {
+                    //zip          
+                    zipFiles(localDataFolder + chapters[indexPath.row].textTitle.text)
+                  }
+                },
+                {
+                  title: "合并导出为单独txt文件",
+                  handler: function() {
+                    //Merge
+                    mergeFile(localDataFolder + chapters[indexPath.row].textTitle.text)
+                  }
+                }
+              ]
+            })
           } else {
             var fileItem = $file.read(localDataFolder + chapters[indexPath.row].textTitle.text)
             // $ui.loading("处理中…");
@@ -2130,6 +2148,29 @@ function zipFiles(filePath) {
     })
   } else {
     $ui.toast("没有可打包导出的文件")
+  }
+}
+
+function mergeFile(filePath) {
+  $ui.toast("正在合并笔记本");
+  var dest = filePath.split("/")[filePath.split("/").length-1]+".txt";
+  var filePaths = loopAllFiles(filePath);
+  var files = [];
+  if (filePaths.length != 0) {
+    $ui.loading(true);
+    var fileStr = "";  
+    filePaths.map(item => {
+      var tem = $file.read(item);
+      fileStr += "\n\n" + tem.string;
+    });
+    var output = $data({
+      fileName: dest,   
+      string: fileStr
+    })
+    $ui.loading(false);
+   $share.sheet([dest, output])
+  } else {
+    $ui.toast("没有可合并导出的文件")
   }
 }
 
