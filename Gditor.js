@@ -2161,7 +2161,7 @@ function mergeFile(filePath) {
     var fileStr = "";  
     filePaths.map(item => {
       var tem = $file.read(item);
-      fileStr += "\n\n" + tem.string;
+      fileStr += tem.string + "\n\n";
     });
     var output = $data({
       fileName: dest,   
